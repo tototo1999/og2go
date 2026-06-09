@@ -120,6 +120,27 @@
   .rc-btn.is-primary{background:var(--og-gold);color:var(--og-asphalt);border-color:var(--og-gold)}
   .rc-btn.is-primary:hover{filter:brightness(1.08);color:var(--og-asphalt)}
   .rc-hint{font:500 12px var(--og-font-mono);color:var(--og-bone-dim)}
+  /* ---- 上擂台 live 表单(沿用首页版式) ---- */
+  .arena{margin:30px 0 8px}
+  .arena .lab{margin-bottom:14px}
+  .arena-form{display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    border:1px solid var(--og-line-soft);border-radius:10px;background:var(--og-concrete-2);padding:14px 16px}
+  .arena-form select{flex:1 1 240px;font:600 14px var(--og-font-mono);color:var(--og-bone);
+    background:var(--og-asphalt);border:1px solid var(--og-line-soft);border-radius:7px;padding:10px 12px}
+  .arena-arm{display:flex;border:1px solid var(--og-line-soft);border-radius:7px;overflow:hidden}
+  .arena-arm button{background:transparent;color:var(--og-bone-dim);border:0;padding:10px 14px;
+    font:700 12px var(--og-font-mono);cursor:pointer}
+  .arena-arm button.on{background:var(--og-gold);color:var(--og-asphalt)}
+  .arena-score{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;margin:16px 0 10px}
+  .ar-big{font:900 36px var(--og-font-display,Impact),sans-serif;color:var(--og-bone);line-height:1}
+  .chip{font:800 12px var(--og-font-mono);padding:4px 10px;border-radius:5px}
+  .chip.ok{background:rgba(95,240,176,.16);color:#5ff0b0}
+  .chip.wrong{background:rgba(226,52,47,.18);color:#ff6b66}
+  .chip.nf{background:rgba(255,255,255,.08);color:#c8b06a}
+  .ar-meta{font:500 12px var(--og-font-mono);color:var(--og-bone-dim)}
+  .arena .guar{margin-top:12px;font:600 12px var(--og-font-mono);color:#5ff0b0;border-left:3px solid #5ff0b0;padding:5px 0 5px 12px}
+  #ar-status .spin{color:var(--og-gold);font:700 14px var(--og-font-mono);margin-top:14px;display:inline-block}
+  #ar-status .err{color:#ff6b66;font:600 13px var(--og-font-mono);margin-top:14px;display:inline-block}
   .rc-hidden{position:absolute;left:-9999px;top:0;width:1px;height:1px;opacity:0}
 </style></head>
 <body class="og-body og-atmos og-grain">
@@ -155,7 +176,7 @@
     <button class="rc-btn is-primary" data-copy="rc-questions">📋 复制题目(盲测·粘进聊天框)</button>
     <button class="rc-btn" data-copy="rc-answers">🔑 复制答案(自己核分)</button>
     <button class="rc-btn" data-copy="rc-script">🐍 复制脚本(.py·终端跑,非聊天)</button>
-    <span class="rc-hint" id="rc-hint">①②走聊天框 · ③是 .py 存下来终端跑</span>
+    <span class="rc-hint" id="rc-hint">①②聊天框 · ③.py终端 · 或下面 ▶ 当场盲测</span>
     <textarea id="rc-questions" class="rc-hidden" readonly># OG-002「10 个数连加」· 盲测题卷 v1.0
 # 来源 og2go.ai ·「带 receipts 才上墙」· 答案请用另一个按钮单独复制,别和题目一起喂给模型!
 
@@ -349,6 +370,30 @@ print(f&quot;\n得分 {correct}/{len(QS)}  准确率 {correct/len(QS)*100:.0f}% 
 </textarea>
   </div>
 
+  <section class="arena" id="arena">
+    <div class="lab">▶ 上擂台 · <b>选个模型当场盲测</b> —— 答案锁服务端,模型只收盲题,结果直接跑回这页</div>
+    <div class="arena-form">
+      <select id="ar-model"><option>加载模型中…</option></select>
+      <div class="arena-arm" id="ar-arm">
+        <button data-arm="blind" class="on">禁草稿(心算)</button>
+        <button data-arm="cot">允许写步骤</button>
+      </div>
+      <button class="rc-btn is-primary" id="ar-go" style="white-space:nowrap">▶ 开跑盲测</button>
+    </div>
+    <div id="ar-status"></div>
+    <div id="ar-out" style="display:none">
+      <div class="arena-score">
+        <span class="ar-big" id="ar-big">–</span>
+        <span class="chip ok" id="ar-ok">✓ 0</span>
+        <span class="chip wrong" id="ar-wrong">✗算错 0</span>
+        <span class="chip nf" id="ar-nf">⚠没交卷 0</span>
+        <span class="ar-meta" id="ar-meta"></span>
+      </div>
+      <div class="ans" id="ar-qlist"></div>
+      <div class="guar" id="ar-guar"></div>
+    </div>
+  </section>
+
   <section class="rank">
     <div class="lab">最终排名 · 16 题总分 · 11 个模型(含 1 个 🏴OG 挑战) · <b>只比准确率 + 性价比</b></div>
     <table class="rt">
@@ -415,5 +460,45 @@ document.querySelectorAll('.rc-btn[data-copy]').forEach(function(b){
     clearTimeout(window._rcT); window._rcT = setTimeout(function(){ h.textContent = old; h.style.color=''; }, 2600);
   });
 });
+
+// ---- 上擂台 live(直连 Modal 盲跑接口) ----
+(function(){
+  var BASE="https://tototo1999--og2go-runner-web.modal.run";
+  var NAMES={"bytedance-seed/seed-1.6":"豆包 Seed 1.6","deepseek/deepseek-v3.2":"DeepSeek V3.2","deepseek/deepseek-r1":"DeepSeek R1","qwen/qwen-2.5-72b-instruct":"Qwen2.5 72B","meta-llama/llama-3.3-70b-instruct":"Llama 3.3 70B","google/gemini-2.5-flash-lite":"Gemini 2.5 Flash-Lite","google/gemini-2.5-pro":"Gemini 2.5 Pro","google/gemini-3.5-flash":"Gemini 3.5 Flash","google/gemini-3-flash-preview":"Gemini 3 Flash","openai/gpt-4.1":"GPT-4.1","openai/gpt-4.1-mini":"GPT-4.1 mini","anthropic/claude-haiku-4.5":"Claude Haiku 4.5","anthropic/claude-sonnet-4.6":"Claude Sonnet 4.6","moonshotai/kimi-k2":"Kimi K2","x-ai/grok-4":"Grok 4"};
+  var ARM="blind", armWrap=document.getElementById('ar-arm');
+  if(!armWrap) return;
+  armWrap.querySelectorAll('button').forEach(function(b){b.onclick=function(){armWrap.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');ARM=b.dataset.arm;};});
+  fetch(BASE+"/models").then(function(r){return r.json()}).then(function(list){
+    var s=document.getElementById('ar-model');
+    s.innerHTML=list.map(function(x){return '<option value="'+x+'">'+(NAMES[x]||x)+'</option>'}).join('');
+    if(list.indexOf("google/gemini-3.5-flash")>=0)s.value="google/gemini-3.5-flash";
+  }).catch(function(){document.getElementById('ar-model').innerHTML='<option>接口连不上</option>';});
+  document.getElementById('ar-go').onclick=async function(){
+    var btn=this, model=document.getElementById('ar-model').value, name=NAMES[model]||model;
+    btn.disabled=true; document.getElementById('ar-out').style.display='none';
+    document.getElementById('ar-status').innerHTML='<span class="spin">⏳ '+name+' 正在盲算 16 题…('+(ARM==='cot'?'允许写步骤':'禁草稿心算')+',约 2–30 秒)</span>';
+    try{
+      var r=await fetch(BASE+"/run",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({case:"OG-002",model:model,arm:ARM})});
+      if(!r.ok){var e=await r.json().catch(function(){return{detail:r.status}});throw new Error(e.detail||r.status);}
+      arenaRender(await r.json(), name);
+    }catch(err){document.getElementById('ar-status').innerHTML='<span class="err">✗ 出错:'+err.message+'</span>';}
+    finally{btn.disabled=false;}
+  };
+  function arenaRender(d,name){
+    document.getElementById('ar-status').innerHTML='';
+    document.getElementById('ar-big').textContent=d.ok+'/'+d.n;
+    document.getElementById('ar-ok').textContent='✓ '+d.ok;
+    document.getElementById('ar-wrong').textContent='✗算错 '+d.wrong;
+    document.getElementById('ar-nf').textContent='⚠没交卷 '+d.noformat;
+    document.getElementById('ar-meta').innerHTML=name+' · '+(d.arm==='cot'?'允许写步骤':'禁草稿')+' · 准确率 '+Math.round(d.accuracy*100)+'% · <b style="color:#ff6b66">算错率 '+Math.round(d.wrong_rate*100)+'%</b> · $'+d.cost+' · '+d.elapsed_s+'s';
+    var MK={ok:['✓','ok','本题对'],wrong:['✗','no','算错'],noformat:['⚠','no','没交卷']};
+    document.getElementById('ar-qlist').innerHTML='<div class="hd">逐题(✓对 / ✗算错 / ⚠没交卷):</div>'+d.per_question.map(function(q){
+      var m=MK[q.verdict];
+      return '<div class="ar '+m[1]+'"><span class="mk">'+m[0]+'</span><span class="who">'+q.cat+'</span><span class="av">'+q.final+'</span><span class="note '+m[1]+'">真 '+q.truth+' · '+m[2]+'</span></div>';
+    }).join('');
+    document.getElementById('ar-guar').textContent='🔒 '+d.blind_guarantee;
+    document.getElementById('ar-out').style.display='block';
+  }
+})();
 </script>
 </body></html>
