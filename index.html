@@ -68,6 +68,29 @@
     color:var(--og-bone-dim);font-size:14.5px;line-height:1.6}
   .takeaway b{color:var(--og-bone)}
   .foot{text-align:center;padding:30px 0 70px;color:var(--og-bone-dim);font-size:14px}
+
+  /* ---- 最终排名表(准确率 + 性价比,不比速度) ---- */
+  .rank{margin:42px 0 8px}
+  .rank .lab{margin-bottom:14px}
+  .rt{width:100%;border-collapse:collapse;font:500 13.5px var(--og-font-mono)}
+  .rt th,.rt td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--og-line)}
+  .rt th{color:var(--og-bone-dim);font:700 11px var(--og-font-mono);text-transform:uppercase;
+    letter-spacing:.04em;border-bottom:1px solid var(--og-line-soft)}
+  .rt td.l,.rt th.l{text-align:left}
+  .rt td.rk{color:var(--og-bone-dim);font-weight:800;width:34px}
+  .rt .mdl{color:var(--og-bone);font-weight:700}
+  .rt tr.champ td{background:rgba(244,197,66,.09)}
+  .rt tr.champ .mdl{color:var(--og-gold)}
+  .rt tr.elite td{background:rgba(255,255,255,.025)}
+  .rt .val{color:#5ff0b0;font-weight:700}
+  .rt .val.gate{color:var(--og-bone-dim);font-weight:500}
+  .rt .acc{font-weight:700}
+  .rt .gold-badge{font:800 9px var(--og-font-mono);color:var(--og-asphalt);background:var(--og-gold);
+    padding:1px 5px;border-radius:3px;margin-left:6px;vertical-align:1px}
+  .rt .divider td{padding:3px 10px;border:0;color:var(--og-blood);font:700 10px var(--og-font-mono);
+    text-align:left;letter-spacing:.06em;opacity:.85}
+  .rank .why{margin-top:14px;color:var(--og-bone-dim);font-size:13px;line-height:1.7}
+  .rank .why b{color:var(--og-bone)} .rank .why .no{color:#a86a66}
 </style></head>
 <body class="og-body og-atmos og-grain">
 
@@ -113,6 +136,33 @@
       <div class="ans"><div class="hd">同样 10 个模型,<b>位数一大就崩</b>:</div><div class="ar ok"><span class="mk">✓</span><span class="who"><span class="tier t-cn">中国</span>豆包 Seed 1.6 🏆</span><span class="av">4,687,146,815</span><span class="note ok">满分冠军</span></div><div class="ar ok"><span class="mk">✓</span><span class="who"><span class="tier t-cn">中国</span>DeepSeek V3.2</span><span class="av">4,687,146,815</span><span class="note ok">一字不差</span></div><div class="ar ok"><span class="mk">✓</span><span class="who"><span class="tier t-flag">旗舰</span>Gemini 2.5 Pro</span><span class="av">4,687,146,815</span><span class="note ok">一字不差</span></div><div class="ar ok"><span class="mk">✓</span><span class="who"><span class="tier t-flag">旗舰</span>Claude Sonnet 4.6</span><span class="av">4,687,146,815</span><span class="note ok">一字不差</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-intl">国外</span>Claude Haiku 4.5</span><span class="av">4,687,746,815</span><span class="note no">多了 600,000</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-flag">旗舰</span>GPT-4.1</span><span class="av">4,689,140,615</span><span class="note no">多了 1,993,800</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-cn">中国</span>Qwen2.5 72B</span><span class="av">4,785,266,160</span><span class="note no">多了 98,119,345</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-intl">国外</span>GPT-4.1 mini</span><span class="av">4,786,842,815</span><span class="note no">多了 99,696,000</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-intl">国外</span>Llama 3.3 70B</span><span class="av">4,181,704,815</span><span class="note no">差了 505,442,000</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-intl">国外</span>Gemini 2.5 Flash-Lite</span><span class="av">4,001,371,045</span><span class="note no">差了 685,775,770</span></div></div>
     </div>
     <div class="takeaway">9 位数,<b>10 个里 6 个当场翻车</b>(同样禁草稿心算)。看那些 ✗:有的差几百万(进位错一位)、有的直接错几亿。从头到尾稳住的只有 <b style="color:var(--og-gold)">豆包</b>、Gemini Pro★ 和 Sonnet —— 豆包 16/16 满分还比旗舰便宜;Gemini 是 reasoning 模型,成本铁证它偷打了草稿;Sonnet 是非推理的干净反例。<b>给计算器/允许写步骤,这题就不存在。</b></div>
+  </section>
+
+  <section class="rank">
+    <div class="lab">最终排名 · 16 题总分 · <b>只比准确率 + 性价比</b>(不比速度)</div>
+    <table class="rt">
+      <thead><tr>
+        <th class="rk">#</th><th class="l">模型</th><th>得分</th><th>准确率</th>
+        <th>单题成本</th><th>性价比<br>准÷$</th>
+      </tr></thead>
+      <tbody>
+        <tr class="champ"><td class="rk">1</td><td class="l"><span class="tier t-cn">中国</span><span class="mdl">豆包 Seed 1.6</span><span class="gold-badge">双冠</span></td><td>16/16</td><td class="acc">100%</td><td>$0.0020</td><td class="val">31.5</td></tr>
+        <tr class="elite"><td class="rk">2</td><td class="l"><span class="tier t-flag">旗舰</span><span class="mdl">Gemini 2.5 Pro</span></td><td>15/16</td><td class="acc">94%</td><td>$0.0122</td><td class="val">4.8</td></tr>
+        <tr class="elite"><td class="rk">3</td><td class="l"><span class="tier t-flag">旗舰</span><span class="mdl">Claude Sonnet 4.6</span></td><td>14/16</td><td class="acc">88%</td><td>$0.0018</td><td class="val">30.2</td></tr>
+        <tr class="divider"><td colspan="6">▼ 以下 &lt;80% —— 没资格争性价比之王(全错0成本=性价比无穷大,无意义)</td></tr>
+        <tr><td class="rk">4</td><td class="l"><span class="tier t-cn">中国</span><span class="mdl">DeepSeek V3.2</span></td><td>8/16</td><td>50%</td><td>$0.00003</td><td class="val gate">门槛外</td></tr>
+        <tr><td class="rk">5</td><td class="l"><span class="tier t-intl">国外</span><span class="mdl">Claude Haiku 4.5</span></td><td>8/16</td><td>50%</td><td>$0.00023</td><td class="val gate">门槛外</td></tr>
+        <tr><td class="rk">6</td><td class="l"><span class="tier t-flag">旗舰</span><span class="mdl">GPT-4.1</span></td><td>4/16</td><td>25%</td><td>$0.00025</td><td class="val gate">门槛外</td></tr>
+        <tr><td class="rk">7</td><td class="l"><span class="tier t-intl">国外</span><span class="mdl">Gemini 2.5 Flash-Lite</span></td><td>3/16</td><td>19%</td><td>$0.00002</td><td class="val gate">门槛外</td></tr>
+        <tr><td class="rk">8</td><td class="l"><span class="tier t-intl">国外</span><span class="mdl">GPT-4.1 mini</span></td><td>1/16</td><td>6%</td><td>$0.00005</td><td class="val gate">门槛外</td></tr>
+        <tr><td class="rk">9</td><td class="l"><span class="tier t-intl">国外</span><span class="mdl">Llama 3.3 70B</span></td><td>0/16</td><td>0%</td><td>$0.00002</td><td class="val gate">门槛外</td></tr>
+        <tr><td class="rk">10</td><td class="l"><span class="tier t-cn">中国</span><span class="mdl">Qwen2.5 72B</span></td><td>0/16</td><td>0%</td><td>$0.00005</td><td class="val gate">门槛外</td></tr>
+      </tbody>
+    </table>
+    <div class="why">
+      <b>两块金牌都被豆包端走</b>:① <b>绝对冠军</b>=准确率最高(16/16);② <b>性价比之王</b>=准确率÷成本,且必须先 ≥80% 才有资格。前三名里 —— 豆包、Sonnet 单题 ~$0.002,<b class="no">Gemini Pro 贵 6 倍</b>($0.0122,reasoning 烧隐藏 token)。所以"满分 vs 旗舰"的差，<b>差在成本不差在准</b>:豆包满分还比 Gemini 便宜 6 倍。<br>
+      <span style="color:var(--og-bone-dim)">⚠ 为什么不比速度:延迟严重受网络/服务商负载/排队影响,同一模型不同时刻能差几倍,单测不公平,故不纳入排名。仍是禁草稿/单次/n=16,精确数字看理性版。</span>
+    </div>
   </section>
 
   <div class="foot">16 道题,从 4 位爬到 9 位,<b style="color:var(--og-bone)">每题都这么判</b> —— 但记住:禁草稿/单次/n=16,看理性版的误差棒与显著分组才不会过度解读。<br>
