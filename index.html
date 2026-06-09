@@ -91,6 +91,10 @@
     text-align:left;letter-spacing:.06em;opacity:.85}
   .rt tr.og-challenge td{background:rgba(226,52,47,.08)}
   .rt .og-flag{font:800 9px var(--og-font-mono);color:#fff;background:var(--og-blood);padding:1px 6px;border-radius:3px;margin-left:6px;vertical-align:1px}
+  .rt .vb{font:800 8.5px var(--og-font-mono);padding:1px 5px;border-radius:3px;margin-left:6px;vertical-align:1px;white-space:nowrap}
+  .rt .vb.ok{background:rgba(95,240,176,.14);color:#5ff0b0}
+  .rt .vb.wait{background:rgba(200,176,106,.18);color:#c8b06a}
+  .rt tr.community-row td{background:rgba(200,176,106,.05)}
   .rank .why{margin-top:14px;color:var(--og-bone-dim);font-size:13px;line-height:1.7}
   .rank .why b{color:var(--og-bone)} .rank .why .no{color:#a86a66}
 
@@ -395,7 +399,7 @@ print(f&quot;\n得分 {correct}/{len(QS)}  准确率 {correct/len(QS)*100:.0f}% 
   </section>
 
   <section class="rank">
-    <div class="lab">最终排名 · 16 题总分 · 11 个模型(含 1 个 🏴OG 挑战) · <b>只比准确率 + 性价比</b></div>
+    <div class="lab">最终排名 · 16 题总分 · <span style="color:#5ff0b0">✓策展已复验</span> + <span style="color:#c8b06a">🏟社区待复验</span> · <b>只比准确率 + 性价比</b></div>
     <table class="rt">
       <thead><tr>
         <th class="rk">#</th><th class="l">模型</th><th>得分</th><th>准确率</th>
@@ -420,11 +424,6 @@ print(f&quot;\n得分 {correct}/{len(QS)}  准确率 {correct/len(QS)*100:.0f}% 
       <b>两块金牌都被豆包端走</b>:① <b>绝对冠军</b>=准确率最高(16/16);② <b>性价比之王</b>=准确率÷成本,且必须先 ≥80% 才有资格。前三名里 —— 豆包、Sonnet 单题 ~$0.002,<b class="no">Gemini Pro 贵 6 倍</b>($0.0122,reasoning 烧隐藏 token)。所以"满分 vs 旗舰"的差，<b>差在成本不差在准</b>:豆包满分还比 Gemini 便宜 6 倍。<br>
       <span style="color:var(--og-bone-dim)">⚠ 为什么不比速度:延迟严重受网络/服务商负载/排队影响,同一模型不同时刻能差几倍,单测不公平,故不纳入排名。仍是禁草稿/单次/n=16,精确数字看理性版。</span><br><b style="color:var(--og-blood)">🏴 第 4 行 = OG 社区挑战:</b>有人晒 Gemini 3.5 Flash「16/16」,一查是<b>开卷</b>(模型看到了答案);同配方<b>盲测复验</b>真分 <b>11/16</b>,照样进第 4 名。这就是 og2go —— <b>谁都能挑战上墙,但战绩靠复验,不靠截图</b>。
     </div>
-  </section>
-
-  <section class="cboard">
-    <div class="lab">🏟 社区擂台 · <b>大家盲测提交的战绩</b> —— 单次·未复验,定案上主榜要靠独立复验</div>
-    <div id="cboard-body"><div class="hd" style="color:var(--og-bone-dim);font:500 13px var(--og-font-mono);padding:8px 0">加载社区战绩中…</div></div>
   </section>
 
   <section>
@@ -508,18 +507,26 @@ document.querySelectorAll('.rc-btn[data-copy]').forEach(function(b){
     document.getElementById('ar-out').style.display='block';
   }
   function loadBoard(){
+    var tbody=document.querySelector('.rt tbody'); if(!tbody) return;
+    tbody.querySelectorAll('.community-row,.community-divider').forEach(function(el){el.remove();});   // 清上轮
+    tbody.querySelectorAll('tr').forEach(function(tr){                                                  // 策展行打 ✓已复验
+      if(tr.classList.contains('divider')) return;
+      var mdl=tr.querySelector('.mdl');
+      if(mdl && !tr.dataset.vtag){ tr.dataset.vtag='1'; mdl.insertAdjacentHTML('afterend','<span class="vb ok">✓已复验</span>'); }
+    });
+    var curated={}; tbody.querySelectorAll('.mdl').forEach(function(m){curated[m.textContent.trim()]=1;});
     fetch(BASE+"/board").then(function(r){return r.json()}).then(function(rows){
-      var body=document.getElementById('cboard-body'); if(!body) return;
-      if(!rows.length){body.innerHTML='<div class="hd" style="color:var(--og-bone-dim);font:500 13px var(--og-font-mono);padding:8px 0">还没人提交 —— 上面选个模型,你来当第一个 ↑</div>';return;}
-      var h='<table class="rt"><thead><tr><th class="rk">#</th><th class="l">模型</th><th>赛制</th><th>✓对</th><th>✗算错</th><th>⚠没交</th><th>准确率</th><th>时间</th></tr></thead><tbody>';
-      rows.forEach(function(r,i){
-        h+='<tr><td class="rk">'+(i+1)+'</td><td class="l"><span class="mdl">'+(NAMES[r.model]||r.model)+'</span></td>'+
-           '<td>'+(r.arm==='cot'?'写步骤':'禁草稿')+'</td><td class="acc">'+r.ok+'</td>'+
-           '<td style="color:#ff6b66">'+r.wrong+'</td><td style="color:#c8b06a">'+r.noformat+'</td>'+
-           '<td class="acc">'+Math.round(r.accuracy*100)+'%</td>'+
-           '<td style="color:var(--og-bone-dim);font-size:11px">'+(r.ts||'')+'</td></tr>';
+      var fresh=rows.filter(function(r){return !curated[NAMES[r.model]||r.model];}).sort(function(a,b){return b.accuracy-a.accuracy;});
+      if(!fresh.length) return;
+      var div=document.createElement('tr'); div.className='divider community-divider';
+      div.innerHTML='<td colspan="6">🏟 社区提交 · ⚠ 待复验(单次未核 · 复验稳定后才升主榜)</td>';
+      tbody.appendChild(div);
+      fresh.forEach(function(r){
+        var tr=document.createElement('tr'); tr.className='community-row';
+        tr.innerHTML='<td class="rk">🏟</td><td class="l"><span class="mdl">'+(NAMES[r.model]||r.model)+'</span><span class="vb wait">待复验</span></td>'+
+          '<td>'+r.ok+'/'+r.n+'</td><td>'+Math.round(r.accuracy*100)+'%</td><td>$'+r.cost+'</td><td class="val gate">待复验</td>';
+        tbody.appendChild(tr);
       });
-      body.innerHTML=h+'</tbody></table>';
     }).catch(function(){});
   }
   loadBoard();
