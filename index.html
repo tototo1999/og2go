@@ -422,6 +422,11 @@ print(f&quot;\n得分 {correct}/{len(QS)}  准确率 {correct/len(QS)*100:.0f}% 
     </div>
   </section>
 
+  <section class="cboard">
+    <div class="lab">🏟 社区擂台 · <b>大家盲测提交的战绩</b> —— 单次·未复验,定案上主榜要靠独立复验</div>
+    <div id="cboard-body"><div class="hd" style="color:var(--og-bone-dim);font:500 13px var(--og-font-mono);padding:8px 0">加载社区战绩中…</div></div>
+  </section>
+
   <section>
     <div class="lab">热身 · 第 1 题 · 4 位数 ×10 · <b>6/11 答对</b></div>
     <div class="scene">
@@ -475,14 +480,17 @@ document.querySelectorAll('.rc-btn[data-copy]').forEach(function(b){
   }).catch(function(){document.getElementById('ar-model').innerHTML='<option>接口连不上</option>';});
   document.getElementById('ar-go').onclick=async function(){
     var btn=this, model=document.getElementById('ar-model').value, name=NAMES[model]||model;
+    var armtxt=(ARM==='cot'?'允许写步骤':'禁草稿心算'), t0=Date.now();
     btn.disabled=true; document.getElementById('ar-out').style.display='none';
-    document.getElementById('ar-status').innerHTML='<span class="spin">⏳ '+name+' 正在盲算 16 题…('+(ARM==='cot'?'允许写步骤':'禁草稿心算')+',约 2–30 秒)</span>';
+    function spin(){var s=Math.round((Date.now()-t0)/1000);
+      document.getElementById('ar-status').innerHTML='<span class="spin">⏳ '+name+' 正在盲算 16 题…('+armtxt+') · 已 '+s+'s　<span style="color:var(--og-bone-dim)">别刷新,算完自动出结果(reasoner 可能要 1 分多钟)</span></span>';}
+    spin(); var tick=setInterval(spin,1000);
     try{
       var r=await fetch(BASE+"/run",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({case:"OG-002",model:model,arm:ARM})});
       if(!r.ok){var e=await r.json().catch(function(){return{detail:r.status}});throw new Error(e.detail||r.status);}
-      arenaRender(await r.json(), name);
+      arenaRender(await r.json(), name); loadBoard();
     }catch(err){document.getElementById('ar-status').innerHTML='<span class="err">✗ 出错:'+err.message+'</span>';}
-    finally{btn.disabled=false;}
+    finally{clearInterval(tick); btn.disabled=false;}
   };
   function arenaRender(d,name){
     document.getElementById('ar-status').innerHTML='';
@@ -490,7 +498,7 @@ document.querySelectorAll('.rc-btn[data-copy]').forEach(function(b){
     document.getElementById('ar-ok').textContent='✓ '+d.ok;
     document.getElementById('ar-wrong').textContent='✗算错 '+d.wrong;
     document.getElementById('ar-nf').textContent='⚠没交卷 '+d.noformat;
-    document.getElementById('ar-meta').innerHTML=name+' · '+(d.arm==='cot'?'允许写步骤':'禁草稿')+' · 准确率 '+Math.round(d.accuracy*100)+'% · <b style="color:#ff6b66">算错率 '+Math.round(d.wrong_rate*100)+'%</b> · $'+d.cost+' · '+d.elapsed_s+'s';
+    document.getElementById('ar-meta').innerHTML=name+' · '+(d.arm==='cot'?'允许写步骤':'禁草稿')+' · 准确率 '+Math.round(d.accuracy*100)+'% · <b style="color:#ff6b66">算错率 '+Math.round(d.wrong_rate*100)+'%</b> · $'+d.cost+' · '+d.elapsed_s+'s'+(d.boarded?' · <b style="color:#5ff0b0">✅ 已上社区榜↓</b>':'');
     var MK={ok:['✓','ok','本题对'],wrong:['✗','no','算错'],noformat:['⚠','no','没交卷']};
     document.getElementById('ar-qlist').innerHTML='<div class="hd">逐题(✓对 / ✗算错 / ⚠没交卷):</div>'+d.per_question.map(function(q){
       var m=MK[q.verdict];
@@ -499,6 +507,22 @@ document.querySelectorAll('.rc-btn[data-copy]').forEach(function(b){
     document.getElementById('ar-guar').textContent='🔒 '+d.blind_guarantee;
     document.getElementById('ar-out').style.display='block';
   }
+  function loadBoard(){
+    fetch(BASE+"/board").then(function(r){return r.json()}).then(function(rows){
+      var body=document.getElementById('cboard-body'); if(!body) return;
+      if(!rows.length){body.innerHTML='<div class="hd" style="color:var(--og-bone-dim);font:500 13px var(--og-font-mono);padding:8px 0">还没人提交 —— 上面选个模型,你来当第一个 ↑</div>';return;}
+      var h='<table class="rt"><thead><tr><th class="rk">#</th><th class="l">模型</th><th>赛制</th><th>✓对</th><th>✗算错</th><th>⚠没交</th><th>准确率</th><th>时间</th></tr></thead><tbody>';
+      rows.forEach(function(r,i){
+        h+='<tr><td class="rk">'+(i+1)+'</td><td class="l"><span class="mdl">'+(NAMES[r.model]||r.model)+'</span></td>'+
+           '<td>'+(r.arm==='cot'?'写步骤':'禁草稿')+'</td><td class="acc">'+r.ok+'</td>'+
+           '<td style="color:#ff6b66">'+r.wrong+'</td><td style="color:#c8b06a">'+r.noformat+'</td>'+
+           '<td class="acc">'+Math.round(r.accuracy*100)+'%</td>'+
+           '<td style="color:var(--og-bone-dim);font-size:11px">'+(r.ts||'')+'</td></tr>';
+      });
+      body.innerHTML=h+'</tbody></table>';
+    }).catch(function(){});
+  }
+  loadBoard();
 })();
 </script>
 </body></html>
