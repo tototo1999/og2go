@@ -1,0 +1,216 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex"><title>OG-002 · 理性复盘 // 禁草稿心算大数</title>
+<link rel="stylesheet" href="og2go-theme.css">
+<style>
+  .wrap2{max-width:900px;margin:0 auto;padding:0 24px}
+  .top{padding:78px 0 8px;text-align:center}
+  .top h1{font-size:clamp(26px,4.6vw,46px);margin:12px 0 8px;max-width:20ch;margin-left:auto;margin-right:auto}
+  .top .lead{max-width:62ch;margin:12px auto 0;color:var(--og-bone-dim);font-size:15px;line-height:1.7}
+  .top .lead b{color:var(--og-bone)}
+
+  /* 4 步(审计后的诚实框架) */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:30px 0 6px}
+  @media(max-width:680px){.steps{grid-template-columns:1fr 1fr}}
+  .step{border:1px solid var(--og-line);border-radius:12px;padding:16px 16px 18px;background:var(--og-concrete);text-align:left}
+  .step .k{font:800 12px var(--og-font-mono);color:var(--og-gold);letter-spacing:.1em}
+  .step .t{font-weight:700;margin:6px 0 4px;color:var(--og-bone)}
+  .step .d{font-size:12.5px;color:var(--og-bone-dim);line-height:1.55}
+
+  /* 实验条件面板 */
+  .conds{margin:18px 0 4px;border:1px solid var(--og-line);border-radius:12px;padding:14px 18px;
+    background:linear-gradient(100deg,rgba(244,197,66,.05),transparent);display:flex;flex-wrap:wrap;
+    align-items:center;gap:10px 18px;text-align:left}
+  .conds .ct{font:800 11px var(--og-font-mono);letter-spacing:.12em;color:var(--og-gold);text-transform:uppercase}
+  .conds .cd{font:600 12.5px var(--og-font-mono);color:var(--og-bone-dim)}
+  .conds .cd b{color:var(--og-bone)}
+  .conds .cd.warn b{color:var(--og-blood)}
+
+  section{padding:34px 0}
+  .lab{font:700 11px var(--og-font-mono);letter-spacing:.13em;text-transform:uppercase;color:#6b6e78;
+    display:flex;align-items:center;gap:9px;margin-bottom:8px}
+  .lab b{color:var(--og-gold)}
+  .lab::after{content:"";flex:1;height:1px;background:repeating-linear-gradient(90deg,var(--og-line) 0 7px,transparent 7px 12px)}
+  .sub{color:var(--og-bone-dim);font-size:14px;line-height:1.7;margin:0 0 14px}
+  .sub b{color:var(--og-bone)} .sub .g{color:var(--og-gold)} .sub .r{color:#ff7b76} .sub .c{color:var(--og-cyan)}
+
+  /* heatmap */
+  .hm{display:grid;gap:3px;font-family:var(--og-font-mono)}
+  .hm .cell{padding:9px 4px;text-align:center;border-radius:4px;font-size:11px;color:#0a0a0c;font-weight:700}
+  .hm .hd{background:none;color:#7e818b;font-size:10px;font-weight:700;padding:4px;letter-spacing:.04em}
+  .hm .rn{background:none;color:var(--og-bone-dim);font-size:11.5px;text-align:right;padding-right:10px;white-space:nowrap;font-family:var(--og-font-body);font-weight:600}
+  .hm .rn .st{color:var(--og-gold)} .hm .small{outline:1px dashed rgba(255,255,255,.18);outline-offset:-2px}
+  .hmnote{font:600 10.5px var(--og-font-mono);color:#6b6e78;margin-top:10px;letter-spacing:.03em}
+  .legend{display:flex;align-items:center;gap:8px;font:600 10px var(--og-font-mono);color:#7e818b;margin-top:8px}
+  .legend .grad{width:130px;height:9px;border-radius:5px;background:linear-gradient(90deg,#5a1411,#6e5a2a,#f4c542)}
+  .chartbox{overflow-x:auto;border:1px solid var(--og-line);border-radius:14px;background:#0c0c0e;padding:18px 16px}
+  svg text{font-family:var(--og-font-mono)}
+
+  .keep{margin-top:6px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:680px){.keep{grid-template-columns:1fr}}
+  .kc{border:1px solid var(--og-line);border-radius:12px;padding:16px 18px;background:var(--og-concrete)}
+  .kc.good{border-color:rgba(163,230,53,.25)} .kc.cut{border-color:rgba(226,52,47,.25)}
+  .kc h4{margin:0 0 8px;font-size:13px} .kc.good h4{color:var(--og-lime)} .kc.cut h4{color:#ff7b76}
+  .kc ul{margin:0;padding-left:16px} .kc li{font-size:12.5px;color:var(--og-bone-dim);line-height:1.6;margin:4px 0}
+  .takeaway{margin-top:14px;border-left:3px solid var(--og-gold);padding:6px 0 6px 16px;color:var(--og-bone-dim);font-size:14.5px;line-height:1.6}
+  .takeaway b{color:var(--og-bone)}
+  .foot{text-align:center;padding:26px 0 70px;color:var(--og-bone-dim);font-size:14px}
+  .tags{display:flex;flex-direction:column;gap:12px;align-items:center;margin:18px 0}
+</style></head>
+<body class="og-body og-atmos og-grain">
+
+<header class="top"><div class="wrap2">
+  <div class="og-eyebrow is-gold">悬案 OG-002 · 理性复盘 · 7-agent 审计后重制</div>
+  <h1 class="og-display">禁草稿心算大数:<br>9 个里只有 2 家旗舰扛住</h1>
+  <p class="lead">数据全真,问题在<b>框定</b>。这测的不是"会不会加法",是"禁草稿、单次、不给工具"的极限心算 —— 给计算器或允许写步骤,这道题基本消失。<b>贵 ≠ 准</b>(旗舰 GPT-4.1 仅 4/16)。下面是审计后的诚实呈现。</p>
+  <div class="steps">
+    <div class="step"><div class="k">01 数据</div><div class="t">全真</div><div class="d">分数/成本/144 次/判分都对得上 results.json;失分确为模型真算错,非判分 bug。</div></div>
+    <div class="step"><div class="k">02 约束</div><div class="t">唯一变量=禁草稿</div><div class="d">协议「不要写过程」,禁分步禁工具的极限心算,不是日常用法。</div></div>
+    <div class="step"><div class="k">03 误差</div><div class="t">加 Wilson CI</div><div class="d">n=16 单次采样,95% CI 宽 ±10–22pp,相邻名次基本不显著。</div></div>
+    <div class="step"><div class="k">04 待办</div><div class="t">补对照臂</div><div class="d">允许写过程/给工具,预期便宜模型瞬间逼近满分,把"旗舰才稳"证伪。</div></div>
+  </div>
+  <div class="conds">
+    <span class="ct">实验条件(据 battle.py)</span>
+    <span class="cd">max_tokens <b>1500</b></span>
+    <span class="cd">每题跑 <b>1 次</b></span>
+    <span class="cd">system prompt <b>无</b></span>
+    <span class="cd">协议 <b>FINAL:&lt;整数&gt;·不要写过程</b></span>
+    <span class="cd warn">⚠ <b>无温度固定</b></span>
+    <span class="cd warn">⚠ <b>无重采样</b></span>
+    <span class="cd warn">⚠ <b>reasoning 未统一</b>(Gemini 偷打草稿)</span>
+  </div>
+</div></header>
+
+<div class="wrap2">
+
+  <section>
+    <div class="lab">图① Model × 位数 · 哪里翻车(每格印 <b>k/n</b>)</div>
+    <p class="sub">顶部两家旗舰一路<b class="g">金</b>到 7-8 位才裂;底部一团从 4 位就<b class="r">红</b>。但<b>每桶仅 2-3 题</b>,任何"在第 N 位翻车"的精确断言不可支撑,只看大势别看单格。</p>
+    <div class="chartbox"><div id="heat" class="hm"></div>
+      <div class="legend"><span>答对率</span><span class="grad"></span><span>0% → 100%</span><span style="margin-left:14px">虚线格 = n≤2,更不可解释</span></div>
+      <div class="hmnote" id="pooled"></div></div>
+  </section>
+
+  <section>
+    <div class="lab">图② 成本 vs 准确率 · <b>本案真正的裁决图</b></div>
+    <p class="sub">x=每场成本(<b>对数轴</b>,差 ~660 倍)· y=准确率 · 横线 80% 资格线 · <b>竖须=Wilson 95% CI</b>。一眼看出:<b class="c">Sonnet ~88%</b> 只花 <b class="g">Gemini Pro ~94%</b> 的 <b>~1/6.6</b>(真性价比);误差棒同时暴露中下部一团 CI 大幅重叠、<b>排不出干净顺序</b>。<b class="r">GPT-4.1($2/1M)仅 25%</b>,反被更便宜的 DeepSeek 略高 —— 价格不预测准确率。</p>
+    <div class="chartbox"><svg id="scatter" width="940" height="380" viewBox="0 0 940 380"></svg></div>
+  </section>
+
+  <section>
+    <div class="lab">图③ 总准确率 + Wilson CI · 按<b>显著分组</b>,不按段位</div>
+    <p class="sub">不再给每个模型独立名次/段位。颜色只分<b>非重叠 CI 的显著组</b>:顶部两旗舰显著领先,底部一团统计上<b>不可区分</b>(两个 0/16 不该被排成第 8 vs 9)。</p>
+    <div class="chartbox"><svg id="bars" width="940" height="430" viewBox="0 0 940 430"></svg></div>
+  </section>
+
+  <section>
+    <div class="lab">结案 · <b>留什么 / 砍什么</b></div>
+    <div class="keep">
+      <div class="kc good"><h4>✓ 站得住(经得起统计)</h4><ul>
+        <li>两家旗舰 CI[71.7,98.9]/[64.0,96.5] 显著碾压底部一团(上界 ≤36%)及旗舰 GPT-4.1(25%)</li>
+        <li>真实巨大鲁棒性差异(0/16→15/16)= 同档位 ≠ 同能力</li>
+        <li>成本与准确率不挂钩的强反例(GPT-4.1 vs DeepSeek)</li>
+        <li>完全可复现:gold.json+battle.py+score.py·判分剥逗号后精确匹配</li>
+      </ul></div>
+      <div class="kc cut"><h4>✂ 已砍(overclaim)</h4><ul>
+        <li>"10 个数随意相加都做不到"——实测是禁草稿+单次+无工具</li>
+        <li>"旗舰才稳"——GPT-4.1 仅 25%,被 Haiku 点估计反超(但 n=16 不显著)</li>
+        <li>刚性 1-9 名次表 + 硬段位 夯/人上人/拉/💀</li>
+        <li>"位数一大就翻车"折线——每桶 n=2-3,pooled 尾部还回升,非单调</li>
+        <li>"反方赢/终审定论"的口吻</li>
+      </ul></div>
+    </div>
+    <div class="takeaway">★ 给冠军 <b>Gemini Pro 标星</b>:它是 reasoning 模型,per-call 成本是 Flash-Lite 的 ~730x,铁证它在隐藏通道仍打了草稿,协议没被统一执行。而亚军 <b>Sonnet 是干净反例</b>:非 reasoning、便宜、无隐藏草稿却 14/16 —— 这才是最硬的真信号:<b>便宜非推理也能扛</b>。</div>
+  </section>
+
+  <div class="foot">
+    <div class="og-callout" style="text-align:left"><div class="xp">下一步才是真·结案</div>
+      <p>补两条对照臂:<b style="color:var(--og-bone)">①允许写过程 ②给计算器/代码工具</b> —— 预期便宜模型瞬间逼近满分,把"旗舰才稳"彻底证伪。再每题跑 k=3-5 次拿 mean±SD(仅 ~$1.2)。</p></div>
+    <div class="tags">
+      <span class="og-tag is-gold">数据全真,<span class="mut">框定从严。</span></span>
+      <span class="og-tag">禁草稿心算大数,<span class="mut">只有 2 家扛住;贵 ≠ 准。</span></span>
+    </div>
+    16 道题 4→9 位 · 144 次真打 · $0.24 · <b style="color:var(--og-bone)">协议+采样次数也上墙</b><br>
+    <a class="og-btn is-ghost" href="battle-report-evidence.html" style="margin-top:16px">看逐题证据</a>
+  </div>
+
+</div>
+
+<script>
+const DATA={"models":[{"name":"Gemini 2.5 Pro","tier":"旗舰","k":15,"n":16,"acc":93.8,"lo":71.7,"hi":98.9,"cost":0.1985,"percall":0.01241,"star":true,"buckets":{"4":[3,3],"5":[3,3],"6":[3,3],"7":[3,3],"8":[1,2],"9":[2,2]}},
+{"name":"Claude Sonnet 4.6","tier":"旗舰","k":14,"n":16,"acc":87.5,"lo":64.0,"hi":96.5,"cost":0.0299,"percall":0.00187,"buckets":{"4":[3,3],"5":[3,3],"6":[3,3],"7":[1,3],"8":[2,2],"9":[2,2]}},
+{"name":"Claude Haiku 4.5","tier":"中端","k":9,"n":16,"acc":56.2,"lo":33.2,"hi":76.9,"cost":0.0051,"percall":0.00032,"buckets":{"4":[3,3],"5":[1,3],"6":[3,3],"7":[1,3],"8":[1,2],"9":[0,2]}},
+{"name":"DeepSeek V3.2","tier":"土狗","k":5,"n":16,"acc":31.2,"lo":14.2,"hi":55.6,"cost":0.0003,"percall":0.00002,"buckets":{"4":[1,3],"5":[2,3],"6":[1,3],"7":[0,3],"8":[0,2],"9":[1,2]}},
+{"name":"GPT-4.1","tier":"旗舰","k":4,"n":16,"acc":25.0,"lo":10.2,"hi":49.5,"cost":0.0041,"percall":0.00026,"buckets":{"4":[2,3],"5":[2,3],"6":[0,3],"7":[0,3],"8":[0,2],"9":[0,2]}},
+{"name":"GPT-4.1 mini","tier":"中端","k":2,"n":16,"acc":12.5,"lo":3.5,"hi":36.0,"cost":0.0008,"percall":0.00005,"buckets":{"4":[2,3],"5":[0,3],"6":[0,3],"7":[0,3],"8":[0,2],"9":[0,2]}},
+{"name":"Llama 3.3 70B","tier":"土狗","k":1,"n":16,"acc":6.2,"lo":1.1,"hi":28.3,"cost":0.0003,"percall":0.00002,"buckets":{"4":[1,3],"5":[0,3],"6":[0,3],"7":[0,3],"8":[0,2],"9":[0,2]}},
+{"name":"Gemini 2.5 Flash-Lite","tier":"土狗","k":0,"n":16,"acc":0.0,"lo":0,"hi":19.4,"cost":0.0003,"percall":0.00002,"buckets":{"4":[0,3],"5":[0,3],"6":[0,3],"7":[0,3],"8":[0,2],"9":[0,2]}},
+{"name":"Qwen2.5 72B","tier":"土狗","k":0,"n":16,"acc":0.0,"lo":0,"hi":19.4,"cost":0.0008,"percall":0.00005,"buckets":{"4":[0,3],"5":[0,3],"6":[0,3],"7":[0,3],"8":[0,2],"9":[0,2]}}],
+"pooled":{"4":[15,27,55.6],"5":[11,27,40.7],"6":[10,27,37.0],"7":[5,27,18.5],"8":[4,18,22.2],"9":[5,18,27.8]}};
+
+function accColor(r){
+  const s=[[0,[90,20,17]],[0.5,[110,90,42]],[1,[244,197,66]]];
+  let a=s[0],b=s[2];
+  for(let i=0;i<s.length-1;i++){if(r>=s[i][0]&&r<=s[i+1][0]){a=s[i];b=s[i+1];break;}}
+  const t=(r-a[0])/((b[0]-a[0])||1), c=a[1].map((v,i)=>Math.round(v+(b[1][i]-v)*t));
+  return `rgb(${c[0]},${c[1]},${c[2]})`;
+}
+(function(){
+  const buckets=["4","5","6","7","8","9"], h=document.getElementById('heat');
+  h.style.gridTemplateColumns=`170px repeat(${buckets.length},1fr)`;
+  const cell=(cls,html,style="")=>{const d=document.createElement('div');d.className=cls;d.style.cssText=style;d.innerHTML=html;return d;};
+  h.appendChild(cell('hd rn',''));
+  buckets.forEach(b=>h.appendChild(cell('hd',`${b} 位`)));
+  DATA.models.forEach(m=>{
+    h.appendChild(cell('rn',(m.star?'<span class="st">★ </span>':'')+m.name));
+    buckets.forEach(b=>{const [k,n]=m.buckets[b], r=n?k/n:0;
+      h.appendChild(cell('cell'+(n<=2?' small':''),`${k}/${n}`,`background:${accColor(r)}`));});
+  });
+  const p=DATA.pooled;
+  document.getElementById('pooled').innerHTML='pooled(全员)按位数: '+buckets.map(b=>`${b}位 ${p[b][2]}%`).join(' → ')+'  ·  尾部回升=非单调,小样本噪声,别画悬崖';
+})();
+(function(){
+  const W=940,L=64,R=720,T=30,B=320;
+  const xmin=Math.log10(0.000013), xmax=Math.log10(0.022);
+  const px=c=>L+(Math.log10(c)-xmin)/(xmax-xmin)*(R-L);
+  const py=a=>B-(a/100)*(B-T);
+  let s='';
+  [0,25,50,75,100].forEach(v=>{ s+=`<line x1="${L}" y1="${py(v)}" x2="${R}" y2="${py(v)}" stroke="#2a2c34"/><text x="${L-8}" y="${py(v)+4}" fill="#6b6e78" font-size="10" text-anchor="end">${v}%</text>`; });
+  s+=`<line x1="${L}" y1="${py(80)}" x2="${R}" y2="${py(80)}" stroke="#f4c542" stroke-dasharray="5 4" opacity=".7"/><text x="${R+4}" y="${py(80)+4}" fill="#b88a18" font-size="9">80% 资格线</text>`;
+  [0.00002,0.0001,0.001,0.01].forEach(c=>{ s+=`<line x1="${px(c)}" y1="${T}" x2="${px(c)}" y2="${B}" stroke="#1f2a3a"/><text x="${px(c)}" y="${B+16}" fill="#6b6e78" font-size="9" text-anchor="middle">$${c}</text>`; });
+  s+=`<text x="${(L+R)/2}" y="${B+34}" fill="#7e818b" font-size="10" text-anchor="middle">每场成本 USD (对数轴)</text>`;
+  s+=`<text x="18" y="${(T+B)/2}" fill="#7e818b" font-size="10" text-anchor="middle" transform="rotate(-90 18 ${(T+B)/2})">准确率 %</text>`;
+  DATA.models.forEach(m=>{const x=px(m.percall), col=m.acc>=80?'#f4c542':(m.acc>=33?'#2de2e6':'#cf8b86');
+    s+=`<line x1="${x}" y1="${py(m.lo)}" x2="${x}" y2="${py(m.hi)}" stroke="${col}" stroke-width="1.5" opacity=".55"/>`;
+    s+=`<line x1="${x-4}" y1="${py(m.hi)}" x2="${x+4}" y2="${py(m.hi)}" stroke="${col}" stroke-width="1.5" opacity=".55"/>`;
+    s+=`<line x1="${x-4}" y1="${py(m.lo)}" x2="${x+4}" y2="${py(m.lo)}" stroke="${col}" stroke-width="1.5" opacity=".55"/>`;
+    s+=`<circle cx="${x}" cy="${py(m.acc)}" r="5" fill="${col}" stroke="#0a0a0c" stroke-width="1.5"/>`;
+    s+=`<text x="${x+9}" y="${py(m.acc)+3.5}" fill="#cbd0d8" font-size="10.5">${m.star?'★ ':''}${m.name} ${m.acc}%</text>`;});
+  document.getElementById('scatter').innerHTML=s;
+})();
+(function(){
+  const W=940,L=150,R=820,T=20;
+  const groups=[{t:'显著领先 · 两旗舰',idx:[0,1]},{t:'中部 · 单独一档',idx:[2]},{t:'底部一团 · 统计上不可区分(别排名次)',idx:[3,4,5,6,7,8]}];
+  const px=a=>L+(a/100)*(R-L);
+  const svg=document.getElementById('bars');
+  let bars=''; let y=T;
+  groups.forEach(g=>{
+    bars+=`<text x="0" y="${y+13}" fill="#7e818b" font-size="10.5" font-weight="700">${g.t}</text>`; y+=22;
+    g.idx.forEach(i=>{const m=DATA.models[i], col=m.acc>=80?'#f4c542':(m.acc>=33?'#2de2e6':'#b3433f');
+      bars+=`<text x="${L-10}" y="${y+12}" fill="#cbd0d8" font-size="11" text-anchor="end">${m.star?'★ ':''}${m.name}</text>`;
+      bars+=`<rect x="${L}" y="${y+3}" width="${Math.max(0,px(m.acc)-L)}" height="14" rx="3" fill="${col}" opacity=".8"/>`;
+      bars+=`<line x1="${px(m.lo)}" y1="${y+10}" x2="${px(m.hi)}" y2="${y+10}" stroke="#e6edf3" stroke-width="1.5" opacity=".85"/>`;
+      bars+=`<line x1="${px(m.lo)}" y1="${y+5}" x2="${px(m.lo)}" y2="${y+15}" stroke="#e6edf3" stroke-width="1.5" opacity=".85"/>`;
+      bars+=`<line x1="${px(m.hi)}" y1="${y+5}" x2="${px(m.hi)}" y2="${y+15}" stroke="#e6edf3" stroke-width="1.5" opacity=".85"/>`;
+      bars+=`<text x="${px(m.hi)+8}" y="${y+14}" fill="#9aa0ac" font-size="10">${m.acc}% (${m.k}/16) · CI[${m.lo},${m.hi}]</text>`;
+      y+=24;});
+    y+=10;});
+  const gridBottom=y, H=y+26;
+  let grid='';
+  [0,25,50,75,100].forEach(v=>{ grid+=`<line x1="${px(v)}" y1="${T}" x2="${px(v)}" y2="${gridBottom}" stroke="#1f2a3a"/><text x="${px(v)}" y="${H-6}" fill="#6b6e78" font-size="10" text-anchor="middle">${v}%</text>`; });
+  grid+=`<line x1="${px(80)}" y1="${T}" x2="${px(80)}" y2="${gridBottom}" stroke="#f4c542" stroke-dasharray="5 4" opacity=".6"/>`;
+  svg.setAttribute('height',H); svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML=grid+bars;
+})();
+</script>
+</body></html>

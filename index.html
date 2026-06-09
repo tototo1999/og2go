@@ -1,680 +1,122 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OG TO GO · 视觉识别手册 v1.0</title>
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex"><title>OG2GO · 证据现场 OG-002</title>
+<link rel="stylesheet" href="og2go-theme.css">
 <style>
-/* ============================================================
-   OG2GO · 悬案 // VISUAL IDENTITY SYSTEM  v1.0  (2026-06-08)
-   noir 探案 × NYC street hip-hop × RPG underground
-   单一真源：所有 og2go 页面 import 本文件，组件统一用 .og- 前缀
-   ============================================================ */
+  .wrap2{max-width:880px;margin:0 auto;padding:0 24px}
+  .top{padding:78px 0 8px;text-align:center}
+  .top h1{font-size:clamp(26px,4.6vw,42px);margin:12px 0 8px}
+  .top .lead{max-width:60ch;margin:10px auto 0;color:var(--og-bone-dim);font-size:15px;line-height:1.7}
 
-/* ---------- 1. TOKENS ---------- */
-:root{
-  /* asphalt / concrete (深底) */
-  --og-asphalt:   #0a0a0c;
-  --og-asphalt-2: #121216;
-  --og-concrete:  #1c1d22;
-  --og-concrete-2:#15161b;
-  --og-line:      #2a2c34;
-  --og-line-soft: #3a3c44;
+  /* 4 步过程 */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:30px 0 6px}
+  @media(max-width:680px){.steps{grid-template-columns:1fr 1fr}}
+  .step{border:1px solid var(--og-line);border-radius:12px;padding:16px 16px 18px;background:var(--og-concrete)}
+  .step .k{font:800 12px var(--og-font-mono);color:var(--og-gold);letter-spacing:.1em}
+  .step .t{font-weight:700;margin:6px 0 4px;color:var(--og-bone)}
+  .step .d{font-size:12.5px;color:var(--og-bone-dim);line-height:1.55}
 
-  /* bone / 卷宗纸 (浅底) */
-  --og-bone:     #ece5d4;
-  --og-bone-dim: #cbc3b0;
-  --og-paper:    #ece5d4;
-  --og-paper-ln: #c3b896;
-  --og-ink:      #0a0a0c;
+  /* 实验条件面板 */
+  .conds{margin:18px 0 4px;border:1px solid var(--og-line);border-radius:12px;padding:14px 18px;
+    background:linear-gradient(100deg,rgba(244,197,66,.05),transparent);display:flex;flex-wrap:wrap;
+    align-items:center;gap:10px 18px}
+  .conds .ct{font:800 11px var(--og-font-mono);letter-spacing:.12em;color:var(--og-gold);text-transform:uppercase}
+  .conds .cd{font:600 12.5px var(--og-font-mono);color:var(--og-bone-dim)}
+  .conds .cd b{color:var(--og-bone)}
+  .conds .cd.warn b{color:var(--og-blood)}
 
-  /* signal colors */
-  --og-gold:      #f4c542;   --og-gold-deep:#b88a18;
-  --og-blood:     #e2342f;   --og-blood-deep:#9e1b18;
-  --og-cyan:      #2de2e6;
-  --og-magenta:   #ff2e97;
-  --og-cold:      #4aa8ff;   /* PvE 探案 */
-  --og-heat:      #e2342f;   /* PvP 擂台 */
+  section{padding:34px 0}
+  .lab{font:700 11px var(--og-font-mono);letter-spacing:.13em;text-transform:uppercase;color:#6b6e78;
+    display:flex;align-items:center;gap:9px;margin-bottom:16px}
+  .lab b{color:var(--og-gold)}
+  .lab::after{content:"";flex:1;height:1px;background:repeating-linear-gradient(90deg,var(--og-line) 0 7px,transparent 7px 12px)}
 
-  /* type */
-  --og-font-display:"Impact","Haettenschweiler","Arial Narrow Bold","Oswald","PingFang SC",sans-serif;
-  --og-font-mono:ui-monospace,"SFMono-Regular",Menlo,"Courier New",monospace;
-  --og-font-body:-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  .scene{display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:start}
+  @media(max-width:760px){.scene{grid-template-columns:1fr}}
 
-  /* geometry */
-  --og-radius:12px; --og-radius-sm:6px; --og-radius-lg:16px;
-  --og-gap:20px;
+  /* 算式卡 */
+  .sum{border:1px solid var(--og-line);border-radius:14px;background:#0c0c0e;padding:20px 22px}
+  .sum .cap{font:700 11px var(--og-font-mono);color:#6b6e78;letter-spacing:.1em;margin-bottom:12px}
+  .sum .row{display:flex;justify-content:flex-end;align-items:baseline;font-family:var(--og-font-mono);
+    font-size:15px;color:var(--og-bone-dim);line-height:1.75}
+  .sum .row .op{width:18px;color:#5a5d67} .sum .row .n{min-width:150px;text-align:right}
+  .sum .rule{height:2px;background:var(--og-bone-dim);margin:8px 0 6px;opacity:.5}
+  .sum .truth{display:flex;justify-content:space-between;align-items:baseline;margin-top:4px}
+  .sum .truth .lbl{font:700 11px var(--og-font-mono);color:var(--og-gold-deep)}
+  .sum .truth .v{font-family:var(--og-font-display);font-size:clamp(20px,3vw,30px);color:var(--og-gold);
+    text-shadow:0 0 18px rgba(244,197,66,.3)}
 
-  /* shadows / treatments */
-  --og-shadow-hard:4px 4px 0 #000;
-  --og-shadow-blood:5px 5px 0 var(--og-blood-deep);
-  --og-shadow-drop:0 30px 60px rgba(0,0,0,.5);
-  --og-glow-gold:0 0 26px rgba(244,197,66,.45);
-  --og-glow-cyan:0 0 26px rgba(45,226,230,.40);
+  /* 模型答案 */
+  .ans .hd{font:700 12px var(--og-font-mono);color:var(--og-bone-dim);margin-bottom:10px}
+  .ans .hd b{color:var(--og-bone)}
+  .ar{display:grid;grid-template-columns:24px 1fr auto auto;gap:12px;align-items:center;
+    padding:9px 12px;border-radius:9px;margin-bottom:6px;border:1px solid transparent}
+  .ar.ok{background:rgba(45,226,230,.06);border-color:rgba(45,226,230,.2)}
+  .ar.no{background:rgba(226,52,47,.045);border-color:rgba(226,52,47,.14)}
+  .ar .mk{font-weight:800;text-align:center} .ar.ok .mk{color:#5ff0b0} .ar.no .mk{color:var(--og-blood)}
+  .ar .who{font-size:13.5px;color:var(--og-bone);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ar .av{font-family:var(--og-font-mono);font-size:14px;text-align:right;white-space:nowrap}
+  .ar.ok .av{color:#aef3d4} .ar.no .av{color:#ff9b96}
+  .ar .note{font:600 11px var(--og-font-mono);text-align:right;white-space:nowrap;min-width:96px}
+  .note.ok{color:#5ff0b0} .note.no{color:#a86a66}
+  .tier{font:800 9px var(--og-font-mono);padding:1px 6px;border-radius:4px;margin-right:6px}
+  .tier.t-cn{background:rgba(226,52,47,.18);color:#ff6b66}
+  .tier.t-intl{background:rgba(255,255,255,.07);color:#aab0bd}
+  .tier.t-flag{background:rgba(244,197,66,.16);color:var(--og-gold)}
 
-  /* warning tape (警戒胶带) */
-  --og-tape-gold: repeating-linear-gradient(45deg,var(--og-gold) 0 18px,#1a1a1a 18px 36px);
-  --og-tape-blood:repeating-linear-gradient(45deg,var(--og-blood) 0 18px,#1a1a1a 18px 36px);
-
-  /* film grain (data-uri，零依赖) */
-  --og-grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-}
-
-/* ---------- 2. BASE ---------- */
-.og-body{
-  margin:0; background:var(--og-asphalt); color:var(--og-bone);
-  font-family:var(--og-font-body); -webkit-font-smoothing:antialiased;
-  position:relative; overflow-x:hidden;
-}
-/* 全局颗粒噪点叠层：给任意容器加 .og-grain */
-.og-grain::after{
-  content:""; position:fixed; inset:0; pointer-events:none; z-index:9999;
-  opacity:.05; background-image:var(--og-grain);
-}
-/* 氛围深底：街道光斑 + 斜纹 */
-.og-atmos{
-  background:
-    radial-gradient(900px 500px at 85% 0%,rgba(255,46,151,.10),transparent 60%),
-    radial-gradient(800px 500px at 5% 95%,rgba(45,226,230,.08),transparent 60%),
-    repeating-linear-gradient(115deg,transparent 0 38px,rgba(255,255,255,.012) 38px 39px),
-    var(--og-asphalt);
-}
-.og-wrap{max-width:1080px; margin:0 auto; padding:0 26px}
-
-/* ---------- 3. TYPOGRAPHY ---------- */
-.og-display{
-  font-family:var(--og-font-display); text-transform:uppercase; font-weight:900;
-  line-height:.86; letter-spacing:.01em; color:var(--og-bone);
-  text-shadow:var(--og-shadow-hard), var(--og-shadow-blood);
-}
-.og-display .go{color:var(--og-gold); -webkit-text-stroke:2px #000}
-.og-h2{font-family:var(--og-font-display); text-transform:uppercase; font-weight:900;
-  font-size:clamp(30px,6vw,58px); line-height:.98; color:var(--og-bone); text-shadow:3px 3px 0 #000}
-.og-h2 em{font-style:normal; color:var(--og-gold)}
-.og-mono{font-family:var(--og-font-mono)}
-.og-eyebrow{font-family:var(--og-font-mono); font-size:12px; letter-spacing:.4em;
-  text-transform:uppercase; color:var(--og-blood)}
-.og-eyebrow.is-gold{color:var(--og-gold)}
-.og-lead{max-width:62ch; color:var(--og-bone-dim); font-size:17px; line-height:1.75}
-.og-lead b{color:var(--og-bone)}
-
-/* ---------- 4. WARNING TAPE 警戒胶带 ---------- */
-.og-tape{
-  background:var(--og-tape-gold); padding:9px 0; width:140%;
-  box-shadow:0 4px 20px rgba(0,0,0,.4); transform:rotate(-4deg);
-}
-.og-tape > span{display:block; text-align:center; color:var(--og-ink);
-  letter-spacing:.5em; font-size:13px; font-family:var(--og-font-mono); font-weight:700}
-.og-tape.is-blood{background:var(--og-tape-blood); transform:rotate(3deg)}
-.og-tape.is-blood > span{color:var(--og-bone)}
-
-/* ---------- 5. STAMP 印章 ---------- */
-.og-stamp{
-  display:inline-block; font-family:var(--og-font-display); text-transform:uppercase;
-  border:5px solid var(--og-blood); color:var(--og-blood); padding:8px 18px 4px;
-  border-radius:8px; transform:rotate(-9deg); opacity:.92;
-  text-shadow:2px 2px 0 rgba(226,52,47,.25); box-shadow:inset 0 0 0 2px rgba(226,52,47,.3);
-  line-height:1;
-}
-.og-stamp small{display:block; font-size:.2em; letter-spacing:.5em; text-align:center; margin-top:6px}
-.og-stamp.is-gold{border-color:var(--og-gold); color:var(--og-gold);
-  text-shadow:2px 2px 0 rgba(244,197,66,.25); box-shadow:inset 0 0 0 2px rgba(244,197,66,.3)}
-
-/* ---------- 6. DOSSIER 卷宗卡 ---------- */
-.og-dossier{
-  background:var(--og-paper); color:var(--og-ink); border-radius:8px; overflow:hidden;
-  box-shadow:var(--og-shadow-drop); position:relative; transform:rotate(-.4deg);
-}
-.og-dossier::before{
-  content:"CONFIDENTIAL // 卷宗"; position:absolute; top:10px; right:16px;
-  font:700 11px var(--og-font-mono); letter-spacing:.2em; color:var(--og-blood);
-  border:2px solid var(--og-blood); padding:3px 8px; transform:rotate(6deg); opacity:.7;
-}
-.og-dossier h3{font:800 13px var(--og-font-mono); letter-spacing:.2em; padding:18px 22px 0; color:#6a4a14}
-
-/* dossier 内表格 */
-.og-table{border-collapse:collapse; width:100%; font-size:14.5px; margin-top:8px}
-.og-table th,.og-table td{text-align:left; padding:12px 22px; border-bottom:1px dashed var(--og-paper-ln); vertical-align:top}
-.og-table thead th{font:700 11px var(--og-font-mono); letter-spacing:.12em; text-transform:uppercase;
-  color:#8a7036; border-bottom:2px solid #b3a578}
-.og-table tbody tr:nth-child(even){background:rgba(0,0,0,.035)}
-.og-table td b{color:#1a1a1a}
-.og-table .slang{color:var(--og-blood-deep); font-weight:700}
-.og-table .slang .x{color:var(--og-ink); background:var(--og-gold); padding:0 6px; border-radius:3px}
-
-/* ---------- 7. CALLOUT 金句框 ---------- */
-.og-callout{
-  border:1px solid var(--og-line); border-left:5px solid var(--og-gold); border-radius:var(--og-radius);
-  background:linear-gradient(100deg,rgba(244,197,66,.07),transparent); padding:26px 28px;
-}
-.og-callout .xp{font-family:var(--og-font-display); text-transform:uppercase; font-size:clamp(22px,4vw,34px)}
-.og-callout .xp b{color:var(--og-gold)}
-.og-callout p{margin-top:10px; color:var(--og-bone-dim)}
-
-/* ---------- 8. LADDER 升级阶梯 ---------- */
-.og-ladder{display:flex; align-items:flex-end; gap:6px; overflow-x:auto; padding-bottom:8px}
-.og-rung{flex:1; min-width:108px; text-align:center; border-top:3px solid var(--og-line); padding-top:14px; position:relative}
-.og-rung .lv{font:700 11px var(--og-font-mono); color:#5a5d67; letter-spacing:.1em}
-.og-rung .nm{margin-top:6px; font-family:var(--og-font-display); text-transform:uppercase; font-size:18px; color:var(--og-bone-dim)}
-.og-rung .zh{display:block; font-family:var(--og-font-body); font-size:12px; color:#787b85; margin-top:2px}
-.og-rung.is-mid{border-color:var(--og-cyan)} .og-rung.is-mid .nm{color:var(--og-cyan)}
-.og-rung.is-king{border-color:var(--og-gold)}
-.og-rung.is-king .nm{color:var(--og-gold); font-size:24px; text-shadow:var(--og-glow-gold)}
-.og-rung.is-king::before{content:"👑"; position:absolute; top:-34px; left:50%; transform:translateX(-50%); font-size:24px}
-.og-rung.is-ship{border-color:var(--og-blood)} .og-rung.is-ship .nm{color:var(--og-blood)}
-
-/* ---------- 9. DOORS 双门 (PvE/PvP) ---------- */
-.og-doors{display:grid; grid-template-columns:1fr 1fr; gap:20px; position:relative}
-.og-door{border:1px solid var(--og-line); border-radius:var(--og-radius-lg); padding:34px 28px;
-  position:relative; overflow:hidden; min-height:240px; transition:transform .2s, box-shadow .2s}
-.og-door:hover{transform:translateY(-6px)}
-.og-door.is-cold{background:radial-gradient(500px 300px at 30% 0%,rgba(74,168,255,.16),transparent 60%),#0c1118; border-color:#1d3550}
-.og-door.is-cold:hover{box-shadow:0 24px 50px rgba(74,168,255,.18)}
-.og-door.is-hot{background:radial-gradient(500px 300px at 70% 0%,rgba(226,52,47,.18),transparent 60%),#160c0c; border-color:#4a1d1d}
-.og-door.is-hot:hover{box-shadow:0 24px 50px rgba(226,52,47,.2)}
-.og-door .pin{font:800 12px var(--og-font-mono); letter-spacing:.2em}
-.og-door.is-cold .pin{color:var(--og-cold)} .og-door.is-hot .pin{color:var(--og-blood)}
-.og-door h3{font-family:var(--og-font-display); text-transform:uppercase; font-size:clamp(28px,5vw,40px); margin:10px 0 6px; line-height:1}
-.og-door.is-cold h3{color:#bfe0ff} .og-door.is-hot h3{color:#ffc9c6}
-.og-door p{color:var(--og-bone-dim); font-size:15px; line-height:1.7}
-.og-vs{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:5;
-  font-family:var(--og-font-display); font-size:clamp(40px,8vw,72px); color:var(--og-gold);
-  text-shadow:var(--og-glow-gold),4px 4px 0 #000; pointer-events:none}
-@media(max-width:760px){.og-doors{grid-template-columns:1fr}}
-
-/* ---------- 10. BUTTONS 街头按钮 ---------- */
-.og-btn{
-  display:inline-block; font-family:var(--og-font-display); text-transform:uppercase; letter-spacing:.04em;
-  font-size:18px; color:var(--og-ink); background:var(--og-gold); border:none; cursor:pointer;
-  padding:13px 26px 11px; border-radius:var(--og-radius-sm); box-shadow:var(--og-shadow-hard);
-  transition:transform .12s, box-shadow .12s; text-decoration:none;
-}
-.og-btn:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 #000}
-.og-btn:active{transform:translate(2px,2px); box-shadow:2px 2px 0 #000}
-.og-btn.is-blood{background:var(--og-blood); color:var(--og-bone)}
-.og-btn.is-ghost{background:transparent; color:var(--og-bone); border:2px solid var(--og-line); box-shadow:none}
-.og-btn.is-ghost:hover{border-color:var(--og-gold); color:var(--og-gold); transform:translateY(-2px)}
-
-/* ---------- 11. RANK CHIP 名号徽章 ---------- */
-.og-chip{display:inline-block; font:700 12px var(--og-font-mono); letter-spacing:.12em; text-transform:uppercase;
-  padding:5px 12px; border-radius:999px; border:2px solid var(--og-line-soft); color:var(--og-bone-dim)}
-.og-chip.is-npc{border-color:#33353d; color:#6b6e78}
-.og-chip.is-og{border-color:var(--og-gold); color:var(--og-gold); box-shadow:var(--og-glow-gold)}
-.og-chip.is-go{border-color:var(--og-blood); color:var(--og-blood)}
-
-/* ---------- 12. TAGLINE 标语 ---------- */
-.og-tag{font-family:var(--og-font-display); text-transform:uppercase; font-size:clamp(22px,5vw,40px);
-  color:var(--og-bone); transform:skewX(-6deg); border-left:5px solid var(--og-blood); padding-left:18px;
-  text-shadow:3px 3px 0 #000}
-.og-tag.is-gold{border-color:var(--og-gold); color:var(--og-gold)}
-.og-tag .mut{color:#6b6e78}
-
-/* ---------- 13. ENTRANCE 入场动画 ---------- */
-@keyframes ogRise{from{opacity:0; transform:translateY(22px)} to{opacity:1; transform:none}}
-.og-rise{animation:ogRise .7s cubic-bezier(.2,.7,.2,1) both}
-.og-rise.d1{animation-delay:.08s} .og-rise.d2{animation-delay:.16s}
-.og-rise.d3{animation-delay:.24s} .og-rise.d4{animation-delay:.32s}
-@media(prefers-reduced-motion:reduce){.og-rise{animation:none}}
-
-</style>
-<style>
-  /* 手册自身的排版（用主题 token，不另起炉灶） */
-  .sg-sec{padding:64px 0; border-bottom:1px solid var(--og-line)}
-  .sg-num{font:700 12px var(--og-font-mono); letter-spacing:.3em; color:var(--og-gold-deep)}
-  .sg-title{font-family:var(--og-font-display); text-transform:uppercase; font-size:clamp(24px,4vw,38px);
-    color:var(--og-bone); margin:6px 0 4px; text-shadow:2px 2px 0 #000}
-  .sg-note{color:var(--og-bone-dim); font-size:14.5px; max-width:60ch; margin-top:6px; line-height:1.7}
-  .sg-label{font:700 11px var(--og-font-mono); letter-spacing:.12em; color:#6b6e78; text-transform:uppercase; margin:26px 0 12px}
-  code{font-family:var(--og-font-mono); font-size:12.5px; color:var(--og-cyan); background:#0e1018;
-    border:1px solid var(--og-line); border-radius:5px; padding:2px 7px}
-  .sg-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px}
-  .sw{border-radius:10px; overflow:hidden; border:1px solid var(--og-line); background:var(--og-concrete)}
-  .sw .chip{height:74px} .sw .meta{padding:9px 11px; font:600 11px var(--og-font-mono); color:var(--og-bone-dim)}
-  .sw .meta b{display:block; color:var(--og-bone); font-size:12px; text-transform:uppercase; letter-spacing:.05em}
-  .sg-row{display:flex; flex-wrap:wrap; gap:16px; align-items:center}
-  .type-row{border-bottom:1px dashed var(--og-line); padding:14px 0; display:flex; align-items:baseline; gap:18px; flex-wrap:wrap}
-  .type-row .tag{font:700 10px var(--og-font-mono); color:#6b6e78; letter-spacing:.1em; min-width:130px}
-  /* ===== WORD BANK (素材库) ===== */
-  .wb-sec{padding:60px 0; border-bottom:1px solid var(--og-line)}
-  .wb-num{font:700 12px var(--og-font-mono); letter-spacing:.3em; color:var(--og-gold-deep)}
-  .wb-title{font-family:var(--og-font-display); text-transform:uppercase; font-size:clamp(24px,4vw,40px);
-    color:var(--og-bone); margin:6px 0 4px; text-shadow:2px 2px 0 #000}
-  .wb-title em{font-style:normal; color:var(--og-gold)}
-  .wb-note{color:var(--og-bone-dim); font-size:14.5px; max-width:60ch; margin-top:6px; line-height:1.7}
-  .tier{display:flex; gap:8px; margin-top:24px; flex-wrap:wrap}
-  .tier .t{flex:1; min-width:120px; border-radius:12px; padding:18px 16px; text-align:center; border:1px solid var(--og-line)}
-  .tier .t .lab{font-family:var(--og-font-display); font-size:30px; line-height:1}
-  .tier .t .en{font:700 10px var(--og-font-mono); letter-spacing:.15em; color:#6b6e78; margin-top:4px}
-  .tier .t .m{font-size:12px; color:var(--og-bone-dim); margin-top:8px; line-height:1.5}
-  .tier .hang{background:radial-gradient(120px 80px at 50% 0,rgba(244,197,66,.2),transparent),#161206; border-color:var(--og-gold)}
-  .tier .hang .lab{color:var(--og-gold); text-shadow:var(--og-glow-gold)}
-  .tier .top{border-color:#caa23a} .tier .top .lab{color:#f0d27a}
-  .tier .up{border-color:var(--og-cyan)} .tier .up .lab{color:var(--og-cyan)}
-  .tier .npc .lab{color:#6b6e78} .tier .npc{border-color:#33353d}
-  .tier .la{background:radial-gradient(120px 80px at 50% 0,rgba(226,52,47,.18),transparent),#160c0c; border-color:#4a1d1d}
-  .tier .la .lab{color:var(--og-blood)}
-  .tier-arrow{text-align:center; color:#5a5d67; font:700 12px var(--og-font-mono); letter-spacing:.3em; margin-top:14px}
-  .wall{display:grid; grid-template-columns:repeat(auto-fill,minmax(232px,1fr)); gap:14px; margin-top:24px}
-  .word{border:1px solid var(--og-line); border-radius:12px; padding:16px 18px; background:var(--og-concrete);
-    transition:transform .15s, border-color .15s}
-  .word:hover{transform:translateY(-4px); border-color:var(--og-gold-deep)}
-  .word .t{font-family:var(--og-font-display); text-transform:uppercase; font-size:23px; color:var(--og-bone); line-height:1}
-  .word .zh{font-family:var(--og-font-body); font-size:13px; color:#8a8d97; margin-left:8px}
-  .word .m{color:var(--og-bone-dim); font-size:13px; margin-top:9px; line-height:1.6}
-  .word .use{margin-top:11px; font:700 11px var(--og-font-mono); letter-spacing:.04em; color:var(--og-gold);
-    border-top:1px dashed var(--og-line); padding-top:9px}
-  .word .use::before{content:"→ "; color:var(--og-gold-deep)}
-  /* ===== LO-FI 悬浮播放器 ===== */
-  .lofi{position:fixed; right:24px; bottom:22px; z-index:10000;
-    display:flex; align-items:center; gap:16px; padding:12px 20px 12px 18px;
-    background:rgba(18,18,22,.6); backdrop-filter:blur(18px) saturate(1.25); -webkit-backdrop-filter:blur(18px) saturate(1.25);
-    border:1px solid rgba(255,255,255,.10); border-radius:18px; box-shadow:0 18px 50px rgba(0,0,0,.55);
-    font-family:var(--og-font-mono); max-width:92vw; transition:width .3s,height .3s,padding .3s,border-radius .3s}
-  .lofi-eq{display:flex; align-items:flex-end; gap:3px; height:26px; flex:none}
-  .lofi-eq i{width:4px; height:8px; background:var(--og-blood); border-radius:2px}
-  .lofi.playing .lofi-eq i{animation:lofiEq .9s ease-in-out infinite}
-  .lofi.playing .lofi-eq i:nth-child(2){animation-delay:.18s; background:var(--og-gold)}
-  .lofi.playing .lofi-eq i:nth-child(3){animation-delay:.36s}
-  .lofi.playing .lofi-eq i:nth-child(4){animation-delay:.54s; background:var(--og-gold)}
-  @keyframes lofiEq{0%,100%{height:6px}50%{height:24px}}
-  .lofi-meta{min-width:148px}
-  .lofi-title{font-family:var(--og-font-display); text-transform:uppercase; font-size:18px; color:#fff; letter-spacing:.02em; line-height:1}
-  .lofi-artist{font-size:11px; color:#9aa0ac; letter-spacing:.08em; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px}
-  .lofi-ctrl{display:flex; align-items:center; gap:8px}
-  .lofi-ctrl button{background:none; border:none; color:#e6e6ea; font-size:17px; cursor:pointer; width:34px; height:34px;
-    border-radius:50%; display:grid; place-items:center; transition:background .15s}
-  .lofi-ctrl button:hover{background:rgba(255,255,255,.12)}
-  .lofi-ctrl .play{background:var(--og-gold); color:#0a0a0c; font-size:14px}
-  .lofi-ctrl .play:hover{background:#ffd766}
-  .lofi-mini{position:absolute; top:-11px; right:-11px; width:28px; height:28px; border-radius:50%;
-    background:rgba(40,40,46,.92); border:1px solid rgba(255,255,255,.16); color:#cfd2da; cursor:pointer; font-size:15px; line-height:1; padding:0}
-  .lofi.min{gap:0; padding:0; width:60px; height:60px; border-radius:50%; justify-content:center; cursor:pointer}
-  .lofi.min .lofi-meta,.lofi.min .lofi-ctrl,.lofi.min .lofi-mini{display:none}
-</style>
-</head>
+  .takeaway{margin-top:14px;border-left:3px solid var(--og-gold);padding:6px 0 6px 16px;
+    color:var(--og-bone-dim);font-size:14.5px;line-height:1.6}
+  .takeaway b{color:var(--og-bone)}
+  .foot{text-align:center;padding:30px 0 70px;color:var(--og-bone-dim);font-size:14px}
+</style></head>
 <body class="og-body og-atmos og-grain">
 
-<!-- ===== COVER ===== -->
-<header style="padding:90px 0 50px; position:relative; overflow:hidden">
-  <div class="og-tape og-rise" style="position:absolute; top:48px; left:-80px"><span>FIELD MANUAL // 视觉识别手册 // FIELD MANUAL // 视觉识别手册</span></div>
-  <div class="og-wrap" style="padding-top:60px">
-    <div class="og-eyebrow is-gold og-rise">OG TO GO · visual identity system · v1.0</div>
-    <h1 class="og-display og-rise d1" style="font-size:clamp(48px,12vw,120px); margin-top:14px">卷宗<span class="go">手册</span></h1>
-    <p class="og-lead og-rise d2" style="margin-top:20px">这是 OG TO GO「悬案」世界的<b>单一视觉真源</b>。所有页面 import <code>og2go-theme.css</code>，组件统一 <code>.og-</code> 前缀。
-      调性：<b>noir 探案 × NYC street hip-hop × RPG underground</b>。冷、躁、地下、有名号。</p>
-    <div class="og-row og-rise d3" style="margin-top:26px">
-      <span class="og-chip is-npc">NPC</span><span class="og-chip">ROOKIE</span>
-      <span class="og-chip">SOLDIER</span><span class="og-chip is-og">OG</span><span class="og-chip is-go">GO</span>
-    </div>
+<header class="top"><div class="wrap2">
+  <div class="og-eyebrow is-gold">证据现场 · OG-002 · 判分过程摆给你看</div>
+  <h1 class="og-display">怎么判出「只 3 个能稳住」的?</h1>
+  <p class="lead">不是只有 3 个能算对——每道题都有好几个答对(下面这两道一道 5/10、一道 4/10)。但 16 道从 4 位爬到 9 位<b style="color:var(--og-bone)">一路不崩</b>的,全程只有 3 个:Gemini Pro、Sonnet,还有杀出来 <b style="color:var(--og-gold)">16/16 满分登顶的豆包</b>(中国·还比旗舰便宜)。每道题怎么判,全摆出来。这就是「带 receipts 才上墙」。</p>
+  <div class="steps">
+    <div class="step"><div class="k">01 出题</div><div class="t">10 个随机数</div><div class="d">16 道题,每道 10 个整数相加,位数 4→9 递增。真值 Python 精确算,不靠 AI。</div></div>
+    <div class="step"><div class="k">02 真考</div><div class="t">原样发给 10 个模型</div><div class="d">每道题真发 API,收回答案。共 160 次真实调用,~$0.266(含后补的豆包)。</div></div>
+    <div class="step"><div class="k">03 判分</div><div class="t">跟真值死磕</div><div class="d">抽出模型最终答案,跟真值一字不差比对。对 ✓ 错 ✗,没得商量。</div></div>
+    <div class="step"><div class="k">04 排名</div><div class="t">数对几题</div><div class="d">每个模型答对几题 → 准确率 → 谁稳谁崩。下面看两道真题怎么判的。</div></div>
   </div>
-</header>
+  <div class="conds">
+    <span class="ct">实验条件(据 battle.py)</span>
+    <span class="cd">max_tokens <b>1500</b></span>
+    <span class="cd">每题跑 <b>1 次</b></span>
+    <span class="cd">system prompt <b>无</b></span>
+    <span class="cd">统一协议 <b>FINAL:&lt;整数&gt;·不要写过程</b></span>
+    <span class="cd warn">⚠ <b>无温度固定</b></span>
+    <span class="cd warn">⚠ <b>无重采样</b></span>
+    <span class="cd warn">⚠ <b>reasoning 未统一</b></span>
+  </div>
+</div></header>
 
-<div class="og-wrap">
+<div class="wrap2">
 
-  <!-- ===== 01 COLOR ===== -->
-  <section class="sg-sec">
-    <div class="sg-num">01</div><div class="sg-title">Color · 颜料</div>
-    <p class="sg-note">主色用沥青黑铺底，金 + 血红做信号，冷蓝/品红做强调。token 全部 <code>--og-*</code>。</p>
-    <div class="sg-label">深底 · asphalt / concrete</div>
-    <div class="sg-grid">
-      <div class="sw"><div class="chip" style="background:#0a0a0c"></div><div class="meta"><b>asphalt</b>--og-asphalt</div></div>
-      <div class="sw"><div class="chip" style="background:#1c1d22"></div><div class="meta"><b>concrete</b>--og-concrete</div></div>
-      <div class="sw"><div class="chip" style="background:#2a2c34"></div><div class="meta"><b>line</b>--og-line</div></div>
-      <div class="sw"><div class="chip" style="background:#ece5d4"></div><div class="meta" style="color:#1a1a1a"><b style="color:#000">bone/卷宗</b>--og-bone</div></div>
+  <section>
+    <div class="lab">热身 · 第 1 题 · 4 位数 ×10 · <b>5/10 答对</b></div>
+    <div class="scene">
+      <div class="sum"><div class="cap">// 题目:把这 10 个数加起来</div><div class="row"><span class="op">&nbsp;</span><span class="n">6,861</span></div><div class="row"><span class="op">+</span><span class="n">8,829</span></div><div class="row"><span class="op">+</span><span class="n">3,654</span></div><div class="row"><span class="op">+</span><span class="n">8,136</span></div><div class="row"><span class="op">+</span><span class="n">6,739</span></div><div class="row"><span class="op">+</span><span class="n">3,429</span></div><div class="row"><span class="op">+</span><span class="n">9,751</span></div><div class="row"><span class="op">+</span><span class="n">1,907</span></div><div class="row"><span class="op">+</span><span class="n">7,620</span></div><div class="row"><span class="op">+</span><span class="n">1,660</span></div>
+        <div class="rule"></div><div class="truth"><span class="lbl">真值 =</span><span class="v">58,586</span></div></div>
+      <div class="ans"><div class="hd">10 个模型<b>当场怎么答的</b>(✓ 对 / ✗ 错):</div><div class="ar ok"><span class="mk">✓</span><span class="who"><span class="tier t-cn">中国</span>豆包 Seed 1.6 🏆</span><span class="av">58,586</span><span class="note ok">满分冠军</span></div><div class="ar ok"><span class="mk">✓</span><span class="who"><span class="tier t-cn">中国</span>DeepSeek V3.2</span><span class="av">58,586</span><span class="note ok">一字不差</span></div><div class="ar ok"><span class="mk">✓</span><span class="who"><span class="tier t-intl">国外</span>Claude Haiku 4.5</span><span class="av">58,586</span><span class="note ok">一字不差</span></div><div class="ar ok"><span class="mk">✓</span><span class="who"><span class="tier t-flag">旗舰</span>Gemini 2.5 Pro</span><span class="av">58,586</span><span class="note ok">一字不差</span></div><div class="ar ok"><span class="mk">✓</span><span class="who"><span class="tier t-flag">旗舰</span>Claude Sonnet 4.6</span><span class="av">58,586</span><span class="note ok">一字不差</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-cn">中国</span>Qwen2.5 72B</span><span class="av">58,626</span><span class="note no">多了 40</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-flag">旗舰</span>GPT-4.1</span><span class="av">58,686</span><span class="note no">多了 100</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-intl">国外</span>GPT-4.1 mini</span><span class="av">55,586</span><span class="note no">差了 3,000</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-intl">国外</span>Gemini 2.5 Flash-Lite</span><span class="av">68,610</span><span class="note no">多了 10,024</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-intl">国外</span>Llama 3.3 70B</span><span class="av">6,861</span><span class="note no">差了 51,725</span></div></div>
     </div>
-    <div class="sg-label">信号 · signal</div>
-    <div class="sg-grid">
-      <div class="sw"><div class="chip" style="background:#f4c542"></div><div class="meta"><b>gold</b>--og-gold</div></div>
-      <div class="sw"><div class="chip" style="background:#e2342f"></div><div class="meta"><b>blood</b>--og-blood</div></div>
-      <div class="sw"><div class="chip" style="background:#4aa8ff"></div><div class="meta"><b>cold·PvE</b>--og-cold</div></div>
-      <div class="sw"><div class="chip" style="background:#e2342f"></div><div class="meta"><b>heat·PvP</b>--og-heat</div></div>
-      <div class="sw"><div class="chip" style="background:#2de2e6"></div><div class="meta"><b>cyan</b>--og-cyan</div></div>
-      <div class="sw"><div class="chip" style="background:#ff2e97"></div><div class="meta"><b>magenta</b>--og-magenta</div></div>
-    </div>
+    <div class="takeaway">注意这是<b>禁草稿/不给工具</b>的心算:就算只 4 位数,<b>10 个里也只有 5 个算对</b>。多数模型连小数连加都不稳——但允许写步骤/给计算器就会好很多,这测的是"被禁草稿的心算"不是"会不会加法"。</div>
   </section>
 
-  <!-- ===== 02 TYPE ===== -->
-  <section class="sg-sec">
-    <div class="sg-num">02</div><div class="sg-title">Type · 字体</div>
-    <p class="sg-note">三套：<b>Display</b>（Impact 系，海报巨字/标题）· <b>Mono</b>（卷宗/标签/代码）· <b>Body</b>（正文，中文走 PingFang）。</p>
-    <div class="type-row"><span class="tag">DISPLAY · --og-font-display</span><span class="og-display" style="font-size:40px">FROM NPC TO <span class="go">OG</span></span></div>
-    <div class="type-row"><span class="tag">H2 · .og-h2</span><span class="og-h2" style="font-size:34px">蹲着破案的<em>冷</em></span></div>
-    <div class="type-row"><span class="tag">EYEBROW · .og-eyebrow</span><span class="og-eyebrow">01 — 名字即通关路线</span></div>
-    <div class="type-row"><span class="tag">MONO · --og-font-mono</span><span class="og-mono" style="color:var(--og-bone-dim)">// CASE FILE · cold case · KO 结案</span></div>
-    <div class="type-row"><span class="tag">BODY · --og-font-body</span><span style="color:var(--og-bone-dim)">正文中文用系统 PingFang，干净不抢戏。</span></div>
+  <section>
+    <div class="lab">上强度 · 第 16 题 · 9 位数 ×10 · <b>只 4/10 答对</b></div>
+    <div class="scene">
+      <div class="sum"><div class="cap">// 题目:把这 10 个数加起来</div><div class="row"><span class="op">&nbsp;</span><span class="n">465,060,564</span></div><div class="row"><span class="op">+</span><span class="n">976,720,443</span></div><div class="row"><span class="op">+</span><span class="n">143,853,578</span></div><div class="row"><span class="op">+</span><span class="n">134,529,161</span></div><div class="row"><span class="op">+</span><span class="n">656,830,543</span></div><div class="row"><span class="op">+</span><span class="n">111,475,322</span></div><div class="row"><span class="op">+</span><span class="n">272,988,485</span></div><div class="row"><span class="op">+</span><span class="n">754,255,986</span></div><div class="row"><span class="op">+</span><span class="n">789,649,768</span></div><div class="row"><span class="op">+</span><span class="n">381,782,965</span></div>
+        <div class="rule"></div><div class="truth"><span class="lbl">真值 =</span><span class="v">4,687,146,815</span></div></div>
+      <div class="ans"><div class="hd">同样 10 个模型,<b>位数一大就崩</b>:</div><div class="ar ok"><span class="mk">✓</span><span class="who"><span class="tier t-cn">中国</span>豆包 Seed 1.6 🏆</span><span class="av">4,687,146,815</span><span class="note ok">满分冠军</span></div><div class="ar ok"><span class="mk">✓</span><span class="who"><span class="tier t-cn">中国</span>DeepSeek V3.2</span><span class="av">4,687,146,815</span><span class="note ok">一字不差</span></div><div class="ar ok"><span class="mk">✓</span><span class="who"><span class="tier t-flag">旗舰</span>Gemini 2.5 Pro</span><span class="av">4,687,146,815</span><span class="note ok">一字不差</span></div><div class="ar ok"><span class="mk">✓</span><span class="who"><span class="tier t-flag">旗舰</span>Claude Sonnet 4.6</span><span class="av">4,687,146,815</span><span class="note ok">一字不差</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-intl">国外</span>Claude Haiku 4.5</span><span class="av">4,687,746,815</span><span class="note no">多了 600,000</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-flag">旗舰</span>GPT-4.1</span><span class="av">4,689,140,615</span><span class="note no">多了 1,993,800</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-cn">中国</span>Qwen2.5 72B</span><span class="av">4,785,266,160</span><span class="note no">多了 98,119,345</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-intl">国外</span>GPT-4.1 mini</span><span class="av">4,786,842,815</span><span class="note no">多了 99,696,000</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-intl">国外</span>Llama 3.3 70B</span><span class="av">4,181,704,815</span><span class="note no">差了 505,442,000</span></div><div class="ar no"><span class="mk">✗</span><span class="who"><span class="tier t-intl">国外</span>Gemini 2.5 Flash-Lite</span><span class="av">4,001,371,045</span><span class="note no">差了 685,775,770</span></div></div>
+    </div>
+    <div class="takeaway">9 位数,<b>10 个里 6 个当场翻车</b>(同样禁草稿心算)。看那些 ✗:有的差几百万(进位错一位)、有的直接错几亿。从头到尾稳住的只有 <b style="color:var(--og-gold)">豆包</b>、Gemini Pro★ 和 Sonnet —— 豆包 16/16 满分还比旗舰便宜;Gemini 是 reasoning 模型,成本铁证它偷打了草稿;Sonnet 是非推理的干净反例。<b>给计算器/允许写步骤,这题就不存在。</b></div>
   </section>
 
-  <!-- ===== 03 TAPE + STAMP ===== -->
-  <section class="sg-sec">
-    <div class="sg-num">03</div><div class="sg-title">Tape & Stamp · 胶带 / 印章</div>
-    <p class="sg-note">招牌氛围件。<code>.og-tape</code> 警戒胶带（金/血红两款）、<code>.og-stamp</code> 旋转印章。</p>
-    <div class="sg-label">.og-tape / .og-tape.is-blood</div>
-    <div style="display:flex; flex-direction:column; gap:22px; overflow:hidden; padding:10px 0">
-      <div class="og-tape" style="width:100%; transform:rotate(-2deg)"><span>悬 案 // OPEN CASE // 悬 案 // OPEN CASE</span></div>
-      <div class="og-tape is-blood" style="width:100%; transform:rotate(1deg)"><span>结 案 // CASE CLOSED // KO // 结 案</span></div>
-    </div>
-    <div class="sg-label">.og-stamp / .og-stamp.is-gold</div>
-    <div class="sg-row" style="gap:50px; padding:14px 0 4px">
-      <span class="og-stamp" style="font-size:46px">悬案<small>UNSOLVED</small></span>
-      <span class="og-stamp is-gold" style="font-size:46px; transform:rotate(7deg)">结案<small>CLOSED</small></span>
-    </div>
-  </section>
-
-  <!-- ===== 04 DOSSIER ===== -->
-  <section class="sg-sec">
-    <div class="sg-num">04</div><div class="sg-title">Dossier · 卷宗卡</div>
-    <p class="sg-note">米黄档案纸 + CONFIDENTIAL 章。承载黑话表、案情、证据。<code>.og-dossier</code> + <code>.og-table</code>。</p>
-    <div class="og-dossier" style="margin-top:18px">
-      <h3>// CASE FILE · 黑话样例</h3>
-      <table class="og-table">
-        <thead><tr><th>游戏机制</th><th>og2go 干的事</th><th>街头黑话</th></tr></thead>
-        <tbody>
-          <tr><td><b>任务/副本</b></td><td>没定论的争议</td><td class="slang">悬案（cold case）</td></tr>
-          <tr><td><b>通关判定</b></td><td>解法被验证</td><td class="slang"><span class="x">KO 结案</span> · flag</td></tr>
-          <tr><td><b>段位</b></td><td>声望榜</td><td class="slang">名号 · 悬榜</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ===== 05 LADDER ===== -->
-  <section class="sg-sec">
-    <div class="sg-num">05</div><div class="sg-title">Ladder · 升级阶梯</div>
-    <p class="sg-note">the come-up：NPC → OG → GO。<code>.og-ladder</code> + <code>.og-rung</code>（<code>.is-mid/.is-king/.is-ship</code>）。</p>
-    <div class="og-ladder" style="margin-top:34px">
-      <div class="og-rung"><div class="lv">LV.0</div><div class="nm">NPC<span class="zh">路人甲</span></div></div>
-      <div class="og-rung"><div class="lv">LV.1</div><div class="nm">ROOKIE<span class="zh">新人</span></div></div>
-      <div class="og-rung"><div class="lv">LV.2</div><div class="nm">SOLDIER<span class="zh">打手</span></div></div>
-      <div class="og-rung is-mid"><div class="lv">LV.3</div><div class="nm">MADE<span class="zh">出道</span></div></div>
-      <div class="og-rung is-mid"><div class="lv">LV.4</div><div class="nm">CERTIFIED<span class="zh">认证大佬</span></div></div>
-      <div class="og-rung is-king"><div class="lv">MAX</div><div class="nm">OG<span class="zh">原初宗师</span></div></div>
-      <div class="og-rung is-ship"><div class="lv">OUT</div><div class="nm">GO<span class="zh">收山</span></div></div>
-    </div>
-  </section>
-
-  <!-- ===== 06 DOORS ===== -->
-  <section class="sg-sec">
-    <div class="sg-num">06</div><div class="sg-title">Doors · 抉择双门</div>
-    <p class="sg-note">冷/躁二选一的对比件。<code>.og-doors</code> + <code>.og-door.is-cold/.is-hot</code> + <code>.og-vs</code>。</p>
-    <div class="og-doors" style="margin-top:24px">
-      <div class="og-door is-cold">
-        <div class="pin">PvE · 你 vs 悬案</div>
-        <h3>探案派</h3>
-        <p style="margin-top:10px">闯关结案、攒 XP 升段位。冷·烧脑·单机沉浸。</p>
-      </div>
-      <div class="og-door is-hot">
-        <div class="pin">PvP · 你 vs builder</div>
-        <h3>擂台派</h3>
-        <p style="margin-top:10px">Battle/Cypher 正面刚、KO 上位。躁·对抗·强社交。</p>
-      </div>
-      <div class="og-vs">VS</div>
-    </div>
-  </section>
-
-  <!-- ===== 07 BUTTONS / CHIPS / CALLOUT / TAG ===== -->
-  <section class="sg-sec">
-    <div class="sg-num">07</div><div class="sg-title">Controls · 按钮 / 徽章 / 金句</div>
-    <div class="sg-label">.og-btn（hard-shadow 街头按钮）</div>
-    <div class="sg-row">
-      <a class="og-btn">接案 GO</a>
-      <a class="og-btn is-blood">踢馆 BATTLE</a>
-      <a class="og-btn is-ghost">看卷宗</a>
-    </div>
-    <div class="sg-label">.og-chip（名号徽章）</div>
-    <div class="sg-row">
-      <span class="og-chip is-npc">NPC</span><span class="og-chip">SOLDIER</span>
-      <span class="og-chip is-og">OG</span><span class="og-chip is-go">GO</span>
-    </div>
-    <div class="sg-label">.og-callout（金句框）</div>
-    <div class="og-callout"><div class="xp">每结一案 ＝ 沉一条 <b>共识</b></div>
-      <p>攒 XP = 往共识库添真经验，游戏机制 = 产品本质。</p></div>
-    <div class="sg-label">.og-tag（标语）</div>
-    <div style="display:flex; flex-direction:column; gap:12px">
-      <span class="og-tag is-gold">From NPC to OG.</span>
-      <span class="og-tag">悬案不结，<span class="mut">名号不立。</span></span>
-    </div>
-  </section>
-
-  <!-- ===================== PART II · 黑话素材库 ===================== -->
-  <section class="sg-sec" style="border-bottom:none; padding-bottom:14px">
-    <div class="og-tape is-blood" style="width:100%; transform:rotate(-1.5deg); margin-bottom:40px"><span>WORD BANK // 黑话素材库 // WORD BANK // 黑话素材库</span></div>
-    <div class="wb-num">PART II · 语料</div>
-    <h2 class="og-display" style="font-size:clamp(40px,9vw,84px); margin-top:8px">黑话<span class="go">素材库</span></h2>
-    <p class="wb-note" style="max-width:64ch">四大簇热词，<b style="color:var(--og-bone)">给文案随取随用</b>：①段位「从夯到拉」②说唱黑话 ③街头 come-up ④网络身份梗。标 <b style="color:var(--og-gold)">→</b> 的已能对上 OG TO GO 机制。</p>
-  </section>
-
-  <!-- WB-01 段位体系 -->
-  <section class="wb-sec">
-    <div class="wb-num">01 · 段位体系</div><div class="wb-title">从夯到拉 <em>// 现成的名号阶梯</em></div>
-    <p class="wb-note">2024 爆火的"万物评级"体系。天生能当 OG TO GO 的<b>中文段位</b>——NPC 在中低位、夯=封神，正好咬合 NPC→OG 主线。</p>
-    <div class="tier">
-      <div class="t la"><div class="lab">拉</div><div class="en">TRASH</div><div class="m">拉胯垫底（东北官话）</div></div>
-      <div class="t npc"><div class="lab">NPC</div><div class="en">NPC</div><div class="m">路人/人机，平庸没特色</div></div>
-      <div class="t up"><div class="lab">人上人</div><div class="en">ABOVE</div><div class="m">中上游，有亮点值得冲</div></div>
-      <div class="t top"><div class="lab">顶级</div><div class="en">ELITE</div><div class="m">顶尖标杆，几乎无瑕</div></div>
-      <div class="t hang"><div class="lab">夯</div><div class="en">GOAT</div><div class="m">最强最火，天花板（闽南语"烘"）</div></div>
-    </div>
-    <div class="tier-arrow">拉 → NPC → 人上人 → 顶级 → 夯（＝封神 OG）→ GO</div>
-  </section>
-
-  <!-- WB-02 说唱黑话 -->
-  <section class="wb-sec">
-    <div class="wb-num">02 · 说唱 / 嘻哈黑话</div><div class="wb-title">《有嘻哈》《新说唱》<em>那票词</em></div>
-    <p class="wb-note">综艺带火、最有 battle 能量的一簇。直接当 OG TO GO 的动作动词和场景词用。</p>
-    <div class="wall">
-      <div class="word"><div class="t">Cypher<span class="zh">麦克风接力</span></div><div class="m">一群人围一圈，跟着 beat 轮流上。</div><div class="use">多人围攻同一桩悬案</div></div>
-      <div class="word"><div class="t">Battle<span class="zh">对战</span></div><div class="m">两人轮流 freestyle 正面互怼。</div><div class="use">两个解法正面刚 / 踢馆</div></div>
-      <div class="word"><div class="t">Diss<span class="zh">怼</span></div><div class="m">写词攻击、挑衅对手。</div><div class="use">挑战已被采纳的解 = 翻案</div></div>
-      <div class="word"><div class="t">Punchline<span class="zh">炸点</span></div><div class="m">押韵+节奏完美、让人尖叫的那一句。</div><div class="use">一击结案的神解法</div></div>
-      <div class="word"><div class="t">Freestyle<span class="zh">即兴</span></div><div class="m">就着 beat 当场即兴说。</div><div class="use">现场开麦答悬案</div></div>
-      <div class="word"><div class="t">Flow<span class="zh">律动</span></div><div class="m">押韵/停顿/轻重组成的个人风格，rapper 的灵魂。</div><div class="use">一个 builder 的解题手感/风格</div></div>
-      <div class="word"><div class="t">Bars<span class="zh">小节</span></div><div class="m">一行词；也指"有料的硬词"。</div></div>
-      <div class="word"><div class="t">Verse<span class="zh">主歌</span></div><div class="m">一段 8–16 bars。</div></div>
-      <div class="word"><div class="t">Hook<span class="zh">钩子</span></div><div class="m">最抓人的副歌，循环洗脑。</div><div class="use">悬案的一句话标题</div></div>
-      <div class="word"><div class="t">Beat<span class="zh">伴奏</span></div><div class="m">节奏基础，万物踩它走。</div></div>
-      <div class="word"><div class="t">厂牌<span class="zh">label</span></div><div class="m">rapper 的独立小厂牌，追求独立性。</div><div class="use">垂直行业的 Crew / 堂口</div></div>
-      <div class="word"><div class="t">Skr<span class="zh">拟声</span></div><div class="m">释放节奏的呼声（吴亦凡名场面）。</div><div class="use">叫好/认可的拟声</div></div>
-      <div class="word"><div class="t">双押 / 多押<span class="zh">押韵技</span></div><div class="m">双押三押跳押，硬技术活。</div></div>
-      <div class="word"><div class="t">AKA<span class="zh">又名</span></div><div class="m">also known as，报艺名/外号。</div><div class="use">builder 的道上名号</div></div>
-    </div>
-  </section>
-
-  <!-- WB-03 街头 come-up -->
-  <section class="wb-sec">
-    <div class="wb-num">03 · 街头 COME-UP</div><div class="wb-title">From <em>Nobody</em> to <em>Somebody</em></div>
-    <p class="wb-note">出头叙事的英文原汁，跟 NPC→OG 主线同一根骨。</p>
-    <div class="wall">
-      <div class="word"><div class="t">Nobody → Somebody<span class="zh">无名→成名</span></div><div class="m">从没人鸟到道上有名，come-up 的核心叙事。</div><div class="use">＝ NPC → OG 主线的英文说法</div></div>
-      <div class="word"><div class="t">OG<span class="zh">元老</span></div><div class="m">Original Gangster，开创者/老炮，never sold out。</div><div class="use">满级称号 = 原初宗师</div></div>
-      <div class="word"><div class="t">Come Up<span class="zh">上位</span></div><div class="m">从底层往上爬、出头的过程。</div><div class="use">升段位的整个旅程</div></div>
-      <div class="word"><div class="t">Put On<span class="zh">提携</span></div><div class="m">老炮带新人入行、给机会。</div><div class="use">OG 带 NPC / 师门传承</div></div>
-      <div class="word"><div class="t">Crew<span class="zh">帮</span></div><div class="m">一起混、一起出歌的团队。</div><div class="use">垂直公会 = 厂牌 / 堂口</div></div>
-      <div class="word"><div class="t">Real Recognize Real<span class="zh">真识真</span></div><div class="m">真东西自然认得出真东西，惺惺相惜。</div><div class="use">被验证者互相 endorse</div></div>
-      <div class="word"><div class="t">Real One<span class="zh">靠谱的</span></div><div class="m">真诚、不掺水、可信的人。</div></div>
-      <div class="word"><div class="t">Flex<span class="zh">秀</span></div><div class="m">炫耀实力/战绩。</div><div class="use">晒结案战绩</div></div>
-      <div class="word"><div class="t">Respect / Keep It Real<span class="zh">尊重/真实</span></div><div class="m">嘻哈核心价值观。</div></div>
-    </div>
-  </section>
-
-  <!-- WB-04 网络身份梗 -->
-  <section class="wb-sec">
-    <div class="wb-num">04 · 网络身份梗</div><div class="wb-title">活人感 <em>vs</em> 预制</div>
-    <p class="wb-note">2025 流行语里跟"身份/真假"相关的一簇，专门用来立 <b>人是 player / AI 是 NPC</b> 的价值观。</p>
-    <div class="wall">
-      <div class="word"><div class="t">活人感<span class="zh">live</span></div><div class="m">像真实活人一样有情绪、不僵硬、有生活气。</div><div class="use">人类 builder 的特质</div></div>
-      <div class="word"><div class="t">预制 XX<span class="zh">prefab</span></div><div class="m">预制人生/朋友圈——批量生产、没灵魂没手工感。</div><div class="use">AI 跑脚本 = 预制感</div></div>
-      <div class="word"><div class="t">显眼包<span class="zh">show-off</span></div><div class="m">张扬爱出风头（已转褒义，引人注目）。</div><div class="use">悬案炸场者的徽章</div></div>
-      <div class="word"><div class="t">老六<span class="zh">sneaky</span></div><div class="m">阴人/偷袭（电竞黑话）。</div><div class="use">突然翻案偷袭擂主的人</div></div>
-      <div class="word"><div class="t">赛博对账<span class="zh">cross-check</span></div><div class="m">网上核对彼此经历/记忆，找共鸣。</div><div class="use">共识形成的过程</div></div>
-      <div class="word"><div class="t">审判 / Judge<span class="zh">评级</span></div><div class="m">"万物皆可评等级"，给一切排座次。</div><div class="use">给悬案解法打分</div></div>
-    </div>
-  </section>
-
-  <!-- WB 样例 -->
-  <section class="wb-sec" style="border-bottom:none">
-    <div class="wb-num">★ 拿这些素材能写出的话</div>
-    <div style="display:flex; flex-direction:column; gap:14px; margin-top:20px">
-      <span class="og-tag is-gold">From Nobody to OG.</span>
-      <span class="og-tag">真 OG 有<span class="mut">活人感</span>，NPC 全是<span class="mut">预制的。</span></span>
-      <span class="og-tag">一句 Punchline，<span class="mut">直接结案。</span></span>
-      <span class="og-tag">夯，<span class="mut">还是拉？上麦见真章。</span></span>
-    </div>
-  </section>
-
-  <footer style="padding:50px 0 80px; text-align:center">
-    <div class="og-mono" style="color:#4a4d57; font-size:12px; letter-spacing:.1em">
-      OG TO GO · VISUAL IDENTITY + WORD BANK · v1.0 · 2026-06-08 · 单一真源 og2go-theme.css · real recognize real
-    </div>
-  </footer>
+  <div class="foot">16 道题,从 4 位爬到 9 位,<b style="color:var(--og-bone)">每题都这么判</b> —— 但记住:禁草稿/单次/n=16,看理性版的误差棒与显著分组才不会过度解读。<br>
+    <a class="og-btn is-ghost" href="battle-report-rational.html" style="margin-top:18px">看理性版(带 CI)</a> <a class="og-btn is-ghost" href="styleguide/" style="margin-top:18px">视觉识别手册 →</a></div>
 
 </div>
-
-<!-- ===== LO-FI 背景音乐播放器（Web Audio 程序生成 · 零外链 · 零版权） ===== -->
-<div id="lofi" class="lofi">
-  <button class="lofi-mini" id="lofiMini" title="最小化">—</button>
-  <div class="lofi-eq"><i></i><i></i><i></i><i></i></div>
-  <div class="lofi-meta">
-    <div class="lofi-title" id="lofiTitle">COLD CASE LO-FI</div>
-    <div class="lofi-artist" id="lofiArtist">OG TO GO · 悬案 FM</div>
-  </div>
-  <div class="lofi-ctrl">
-    <button id="lofiPrev" title="上一首">⏮</button>
-    <button id="lofiPlay" class="play" title="播放/暂停">▶</button>
-    <button id="lofiNext" title="下一首">⏭</button>
-  </div>
-</div>
-<script>
-(function(){
-  var $=function(id){return document.getElementById(id);};
-  var player=$('lofi'), playBtn=$('lofiPlay'), titleEl=$('lofiTitle'), artistEl=$('lofiArtist');
-  var tracks=[
-    {name:'COLD CASE · BASS', artist:'OG TO GO · 悬案 FM', bpm:140,
-     prog:[[57,60,64,67],[55,58,62,65],[53,57,60,64],[52,55,59,62]]},   // Am 下行小调，moody
-    {name:'ASPHALT WOBBLE', artist:'OG TO GO · 深夜蹲点', bpm:150,
-     prog:[[50,53,57,60],[48,51,55,58],[55,58,62,65],[53,57,60,64]]},   // Dm 更暗更躁
-    {name:'STAKEOUT 128', artist:'OG TO GO · 卷宗', bpm:128,
-     prog:[[59,62,65,69],[57,60,64,67],[55,59,62,66],[52,55,59,62]]}
-  ];
-  var ctx=null, master=null, filt=null, playing=false, cur=0, timer=null, nextTime=0, bar=0, beat=0;
-  var LA=0.12, TICK=25;
-  function mtof(m){return 440*Math.pow(2,(m-69)/12);}
-  function ensure(){
-    if(ctx) return;
-    ctx=new (window.AudioContext||window.webkitAudioContext)();
-    master=ctx.createGain(); master.gain.value=0;
-    filt=ctx.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=2600; filt.Q.value=0.7;
-    var comp=ctx.createDynamicsCompressor();
-    comp.threshold.value=-14; comp.ratio.value=4; comp.attack.value=0.004; comp.release.value=0.18;
-    filt.connect(master); master.connect(comp); comp.connect(ctx.destination);
-    crackle();
-  }
-  function crackle(){
-    var buf=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate), d=buf.getChannelData(0), i;
-    for(i=0;i<d.length;i++){ d[i]=(Math.random()*2-1)*(Math.random()<0.0009?0.9:0.035); }
-    var s=ctx.createBufferSource(); s.buffer=buf; s.loop=true;
-    var bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=3200;
-    var g=ctx.createGain(); g.gain.value=0.06;
-    s.connect(bp); bp.connect(g); g.connect(master); s.start();
-  }
-  function pad(notes,t,dur){   // 暖糊底（lo-fi 那层）
-    notes.forEach(function(n,i){
-      var o=ctx.createOscillator(); o.type='triangle';
-      o.frequency.value=mtof(n); o.detune.value=(i-1)*5;
-      var g=ctx.createGain();
-      g.gain.setValueAtTime(0,t);
-      g.gain.linearRampToValueAtTime(0.028,t+0.4);
-      g.gain.linearRampToValueAtTime(0.02,t+dur*0.6);
-      g.gain.linearRampToValueAtTime(0,t+dur);
-      o.connect(g); g.connect(filt); o.start(t); o.stop(t+dur+0.1);
-    });
-  }
-  function subBass(root,t,dur,bpm){   // wobble 摇摆贝斯（dubstep 招牌）
-    var o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=mtof(root-24);
-    var o2=ctx.createOscillator(); o2.type='square'; o2.frequency.value=mtof(root-24); o2.detune.value=10;
-    var lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=200; lp.Q.value=9;
-    var lfo=ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=(bpm/60)*2; // 八分音符摇摆
-    var lfoG=ctx.createGain(); lfoG.gain.value=520;
-    lfo.connect(lfoG); lfoG.connect(lp.frequency);
-    var g=ctx.createGain();
-    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.15,t+0.04);
-    g.gain.setValueAtTime(0.15,t+dur-0.08); g.gain.linearRampToValueAtTime(0,t+dur);
-    o.connect(lp); o2.connect(lp); lp.connect(g); g.connect(master);
-    o.start(t); o2.start(t); lfo.start(t);
-    o.stop(t+dur+0.05); o2.stop(t+dur+0.05); lfo.stop(t+dur+0.05);
-  }
-  function kick(t){   // 更狠的 808-ish kick
-    var o=ctx.createOscillator(), g=ctx.createGain();
-    o.frequency.setValueAtTime(165,t); o.frequency.exponentialRampToValueAtTime(44,t+0.1);
-    g.gain.setValueAtTime(0.6,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.22);
-    o.connect(g); g.connect(master); o.start(t); o.stop(t+0.24);
-  }
-  function snare(t){
-    var buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*0.2),ctx.sampleRate), d=buf.getChannelData(0), i;
-    for(i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);
-    var s=ctx.createBufferSource(); s.buffer=buf;
-    var hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=1800;
-    var g=ctx.createGain(); g.gain.setValueAtTime(0.3,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.18);
-    s.connect(hp); hp.connect(g); g.connect(master); s.start(t); s.stop(t+0.2);
-    var o=ctx.createOscillator(), og=ctx.createGain(); o.type='triangle'; o.frequency.value=190;
-    og.gain.setValueAtTime(0.16,t); og.gain.exponentialRampToValueAtTime(0.001,t+0.12);
-    o.connect(og); og.connect(master); o.start(t); o.stop(t+0.13);
-  }
-  function hat(t,open){
-    var dur=open?0.11:0.04;
-    var buf=ctx.createBuffer(1,Math.floor(ctx.sampleRate*dur),ctx.sampleRate), d=buf.getChannelData(0), i;
-    for(i=0;i<d.length;i++) d[i]=Math.random()*2-1;
-    var s=ctx.createBufferSource(); s.buffer=buf;
-    var hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=8200;
-    var g=ctx.createGain(); g.gain.setValueAtTime(open?0.07:0.1,t); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
-    s.connect(hp); hp.connect(g); g.connect(master); s.start(t); s.stop(t+dur+0.02);
-  }
-  function stab(notes,t){   // 反拍锯齿 stab，加躁劲
-    notes.forEach(function(n){
-      var o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=mtof(n); o.detune.value=7;
-      var bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1500; bp.Q.value=1.3;
-      var g=ctx.createGain(); g.gain.setValueAtTime(0.06,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.15);
-      o.connect(bp); bp.connect(g); g.connect(filt); o.start(t); o.stop(t+0.17);
-    });
-  }
-  function schedule(){   // beat = 8 个八分音符/小节，half-time 鼓
-    var t=tracks[cur], spb=60/t.bpm, half=spb/2;
-    while(nextTime < ctx.currentTime+LA){
-      var chord=t.prog[bar%t.prog.length], root=chord[0];
-      if(beat===0){ pad(chord,nextTime,spb*4); subBass(root,nextTime,spb*4,t.bpm); }
-      if(beat===0) kick(nextTime);
-      if(beat===4) snare(nextTime);
-      if(beat===6) kick(nextTime);
-      hat(nextTime, beat%4===3);
-      if(beat===3||beat===5||beat===7) stab(chord,nextTime);
-      beat++; if(beat>=8){beat=0;bar++;}
-      nextTime+=half;
-    }
-  }
-  function play(){
-    ensure(); if(ctx.state==='suspended') ctx.resume();
-    playing=true; player.classList.add('playing'); playBtn.textContent='⏸';
-    master.gain.cancelScheduledValues(ctx.currentTime);
-    master.gain.linearRampToValueAtTime(0.5,ctx.currentTime+0.9);
-    nextTime=ctx.currentTime+0.12;
-    if(timer) clearInterval(timer); timer=setInterval(schedule,TICK);
-  }
-  function pause(){
-    playing=false; player.classList.remove('playing'); playBtn.textContent='▶';
-    if(master) master.gain.linearRampToValueAtTime(0,ctx.currentTime+0.4);
-    if(timer){clearInterval(timer); timer=null;}
-  }
-  function setTrack(i){
-    cur=(i+tracks.length)%tracks.length; bar=0; beat=0;
-    titleEl.textContent=tracks[cur].name; artistEl.textContent=tracks[cur].artist;
-  }
-  playBtn.addEventListener('click',function(e){e.stopPropagation(); playing?pause():play();});
-  $('lofiPrev').addEventListener('click',function(e){e.stopPropagation(); setTrack(cur-1);});
-  $('lofiNext').addEventListener('click',function(e){e.stopPropagation(); setTrack(cur+1);});
-  $('lofiMini').addEventListener('click',function(e){e.stopPropagation(); player.classList.add('min');});
-  player.addEventListener('click',function(){ if(player.classList.contains('min')) player.classList.remove('min'); });
-  setTrack(0);
-})();
-</script>
-
-</body>
-</html>
+</body></html>
