@@ -91,6 +91,24 @@
     text-align:left;letter-spacing:.06em;opacity:.85}
   .rank .why{margin-top:14px;color:var(--og-bone-dim);font-size:13px;line-height:1.7}
   .rank .why b{color:var(--og-bone)} .rank .why .no{color:#a86a66}
+
+  /* ---- 配方复制卡 ---- */
+  .recipe{margin:46px 0 8px}
+  .rc-card{border:1px solid var(--og-line-soft);border-radius:10px;background:var(--og-concrete-2);
+    padding:18px 18px 16px;position:relative;overflow:hidden}
+  .rc-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--og-gold);opacity:.8}
+  .rc-pre{font:500 12px var(--og-font-mono);color:var(--og-bone-dim);background:var(--og-asphalt);
+    border:1px solid var(--og-line);border-radius:6px;padding:12px 14px;margin:0 0 14px;
+    white-space:pre-wrap;line-height:1.55;max-height:230px;overflow:auto}
+  .rc-btns{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+  .rc-btn{font:700 13px var(--og-font-mono);color:var(--og-bone);background:transparent;
+    border:1px solid var(--og-line-soft);border-radius:7px;padding:9px 16px;cursor:pointer;
+    transition:.15s;white-space:nowrap}
+  .rc-btn:hover{border-color:var(--og-gold);color:var(--og-gold)}
+  .rc-btn.is-primary{background:var(--og-gold);color:var(--og-asphalt);border-color:var(--og-gold)}
+  .rc-btn.is-primary:hover{filter:brightness(1.08);color:var(--og-asphalt)}
+  .rc-hint{font:500 12px var(--og-font-mono);color:var(--og-bone-dim)}
+  .rc-hidden{position:absolute;left:-9999px;top:0;width:1px;height:1px;opacity:0}
 </style></head>
 <body class="og-body og-atmos og-grain">
 
@@ -164,8 +182,239 @@
     </div>
     <div class="takeaway">9 位数,<b>10 个里 6 个当场翻车</b>(同样禁草稿心算)。看那些 ✗:有的差几百万(进位错一位)、有的直接错几亿。从头到尾稳住的只有 <b style="color:var(--og-gold)">豆包</b>、Gemini Pro★ 和 Sonnet —— 豆包 16/16 满分还比旗舰便宜;Gemini 是 reasoning 模型,成本铁证它偷打了草稿;Sonnet 是非推理的干净反例。<b>给计算器/允许写步骤,这题就不存在。</b></div>
   </section>
+  <section class="recipe">
+    <div class="lab">📋 带走配方 · <b>自己跑一遍</b> —— 同一套题、同一套判分,丢给你的模型看它几分</div>
+    <div class="rc-card">
+      <pre class="rc-pre"># OG-002「10 个数连加」· 复现配方 v1.0
+# 来源 og2go.ai · 「带 receipts 才上墙」· 拿去丢给你的模型自己跑
+
+## 玩法
+把每道题【原样】发给你的模型,收回它最后一行 `FINAL:` 后的数字,跟下面的真值一字不差比对(剥掉逗号/单位再比)。数对几题=几分。
+
+## 统一协议(已附在每道题后面)
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+
+## 跑分条件(要可复现就锁死)
+- max_tokens: 1500   ·   system prompt: 无   ·   不给计算器/代码工具(测的就是裸心算)
+- temperature: 测极限用贪心 0;测『稳不稳』固定一个值(我们重采样用 1.0)
+- 每题次数: 单次=快;要分清『稳对/蒙对』就每题跑 ≥30 次看命中率
+
+…(完整含 16 题 + 真值 + 判分 + 排名规则)</pre>
+      <div class="rc-btns">
+        <button class="rc-btn is-primary" data-copy="rc-recipe">📋 复制完整配方</button>
+        <button class="rc-btn" data-copy="rc-script">🐍 复制复现脚本 (Python)</button>
+        <span class="rc-hint" id="rc-hint">规则 + 16 题 + 真值,粘到任意模型即可</span>
+      </div>
+      <textarea id="rc-recipe" class="rc-hidden" readonly># OG-002「10 个数连加」· 复现配方 v1.0
+# 来源 og2go.ai · 「带 receipts 才上墙」· 拿去丢给你的模型自己跑
+
+## 玩法
+把每道题【原样】发给你的模型,收回它最后一行 `FINAL:` 后的数字,跟下面的真值一字不差比对(剥掉逗号/单位再比)。数对几题=几分。
+
+## 统一协议(已附在每道题后面)
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+
+## 跑分条件(要可复现就锁死)
+- max_tokens: 1500   ·   system prompt: 无   ·   不给计算器/代码工具(测的就是裸心算)
+- temperature: 测极限用贪心 0;测『稳不稳』固定一个值(我们重采样用 1.0)
+- 每题次数: 单次=快;要分清『稳对/蒙对』就每题跑 ≥30 次看命中率
+
+## 16 道题(位数 4→9 递增)+ 真值
+
+─── q01 · 4 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+6861 + 8829 + 3654 + 8136 + 6739 + 3429 + 9751 + 1907 + 7620 + 1660
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 58,586 ]
+
+─── q02 · 4 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+3169 + 3306 + 5809 + 9148 + 5314 + 2951 + 4136 + 2563 + 1701 + 5022
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 43,119 ]
+
+─── q03 · 4 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+5880 + 2051 + 1064 + 7368 + 4822 + 2475 + 8295 + 4472 + 2737 + 7220
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 46,384 ]
+
+─── q04 · 5 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+78849 + 26807 + 44735 + 95567 + 61380 + 57899 + 46766 + 15682 + 44924 + 69547
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 542,156 ]
+
+─── q05 · 5 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+79968 + 86092 + 59784 + 88715 + 63163 + 73344 + 37793 + 69824 + 53683 + 95480
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 707,846 ]
+
+─── q06 · 5 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+32824 + 32853 + 68992 + 17021 + 12672 + 69313 + 34291 + 36204 + 45573 + 64701
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 414,444 ]
+
+─── q07 · 6 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+206634 + 323351 + 100844 + 115646 + 238223 + 711801 + 431976 + 567509 + 104791 + 279765
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 3,080,540 ]
+
+─── q08 · 6 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+430588 + 352361 + 264122 + 763726 + 631371 + 523026 + 348063 + 918683 + 869182 + 668005
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 5,769,127 ]
+
+─── q09 · 6 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+437337 + 799145 + 454444 + 783111 + 248181 + 175200 + 656906 + 471128 + 755436 + 976736
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 5,757,624 ]
+
+─── q10 · 7 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+4681538 + 6950719 + 3825102 + 5542072 + 6863626 + 7866915 + 1748413 + 7863895 + 6773057 + 8980356
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 61,095,693 ]
+
+─── q11 · 7 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+6175914 + 7474566 + 3874133 + 1271239 + 2287822 + 3542720 + 2195197 + 3393941 + 3523241 + 9810656
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 43,549,429 ]
+
+─── q12 · 7 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+3014078 + 3421446 + 2167088 + 7546106 + 7022886 + 7818959 + 2827706 + 8342284 + 2506225 + 7998430
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 52,665,208 ]
+
+─── q13 · 8 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+97581949 + 37960390 + 92121845 + 93420640 + 58484637 + 88013159 + 54623678 + 53373594 + 49523777 + 94846847
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 719,950,516 ]
+
+─── q14 · 8 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+41291193 + 65061807 + 48242322 + 71455509 + 13916441 + 96780709 + 37440174 + 74555755 + 94765665 + 85808488
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 629,318,063 ]
+
+─── q15 · 9 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+753294805 + 351093776 + 755497909 + 767766514 + 579170840 + 761785869 + 320366731 + 445746833 + 182188729 + 724781917
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 5,641,693,923 ]
+
+─── q16 · 9 位 ×10 ───
+把下面这 10 个整数加起来,等于多少?
+465060564 + 976720443 + 143853578 + 134529161 + 656830543 + 111475322 + 272988485 + 754255986 + 789649768 + 381782965
+
+直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。
+[ 真值 = 4,687,146,815 ]
+
+## 判分规则
+抽模型最后一个 `FINAL:` 后的内容(没有就取最后一非空行)→ 转小写、剥逗号/空格/￥$及单位 → 跟真值精确匹配,差 1 都算错。
+
+## 排名(两块金牌)
+① 绝对冠军 = 准确率最高(并列取最便宜)
+② 性价比之王 = 准确率÷成本,且必须先 ≥80% 才有资格(否则全错0成本=性价比无穷大,无意义)
+
+# 完整可复跑源码: github.com/tototo1999/og2go (gen_gold.py / battle.py / score.py)</textarea>
+      <textarea id="rc-script" class="rc-hidden" readonly>#!/usr/bin/env python3
+&quot;&quot;&quot;OG-002 复现脚本 —— 填你自己的模型,看它跑多少分。
+   pip install openai ; 改下面 3 个变量就能跑。任何 OpenAI 兼容端点都行。&quot;&quot;&quot;
+import re
+from openai import OpenAI
+
+BASE_URL = &quot;https://your-endpoint/v1&quot;   # ← 你的 API 地址(OpenAI 兼容)
+API_KEY  = &quot;sk-...&quot;                       # ← 你的 key
+MODEL    = &quot;your-model-name&quot;              # ← 你的模型名
+
+PROTOCOL = &quot;直接给结果,最后一行输出 `FINAL: &lt;整数&gt;`(带不带逗号都行),不要写过程。&quot;
+# (题目, 真值)  —— 16 道,位数 4→9
+QS = [
+    (&quot;把下面这 10 个整数加起来,等于多少?\n6861 + 8829 + 3654 + 8136 + 6739 + 3429 + 9751 + 1907 + 7620 + 1660&quot;, &quot;58586&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n3169 + 3306 + 5809 + 9148 + 5314 + 2951 + 4136 + 2563 + 1701 + 5022&quot;, &quot;43119&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n5880 + 2051 + 1064 + 7368 + 4822 + 2475 + 8295 + 4472 + 2737 + 7220&quot;, &quot;46384&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n78849 + 26807 + 44735 + 95567 + 61380 + 57899 + 46766 + 15682 + 44924 + 69547&quot;, &quot;542156&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n79968 + 86092 + 59784 + 88715 + 63163 + 73344 + 37793 + 69824 + 53683 + 95480&quot;, &quot;707846&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n32824 + 32853 + 68992 + 17021 + 12672 + 69313 + 34291 + 36204 + 45573 + 64701&quot;, &quot;414444&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n206634 + 323351 + 100844 + 115646 + 238223 + 711801 + 431976 + 567509 + 104791 + 279765&quot;, &quot;3080540&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n430588 + 352361 + 264122 + 763726 + 631371 + 523026 + 348063 + 918683 + 869182 + 668005&quot;, &quot;5769127&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n437337 + 799145 + 454444 + 783111 + 248181 + 175200 + 656906 + 471128 + 755436 + 976736&quot;, &quot;5757624&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n4681538 + 6950719 + 3825102 + 5542072 + 6863626 + 7866915 + 1748413 + 7863895 + 6773057 + 8980356&quot;, &quot;61095693&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n6175914 + 7474566 + 3874133 + 1271239 + 2287822 + 3542720 + 2195197 + 3393941 + 3523241 + 9810656&quot;, &quot;43549429&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n3014078 + 3421446 + 2167088 + 7546106 + 7022886 + 7818959 + 2827706 + 8342284 + 2506225 + 7998430&quot;, &quot;52665208&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n97581949 + 37960390 + 92121845 + 93420640 + 58484637 + 88013159 + 54623678 + 53373594 + 49523777 + 94846847&quot;, &quot;719950516&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n41291193 + 65061807 + 48242322 + 71455509 + 13916441 + 96780709 + 37440174 + 74555755 + 94765665 + 85808488&quot;, &quot;629318063&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n753294805 + 351093776 + 755497909 + 767766514 + 579170840 + 761785869 + 320366731 + 445746833 + 182188729 + 724781917&quot;, &quot;5641693923&quot;),
+    (&quot;把下面这 10 个整数加起来,等于多少?\n465060564 + 976720443 + 143853578 + 134529161 + 656830543 + 111475322 + 272988485 + 754255986 + 789649768 + 381782965&quot;, &quot;4687146815&quot;),
+]
+
+def extract_final(t):
+    m = re.findall(r&quot;final\s*[:：]\s*(.+)&quot;, t, re.I)
+    s = m[-1] if m else (t.strip().splitlines() or [&quot;&quot;])[-1]
+    return s.strip()
+
+def norm(s):
+    s = s.strip().lower()
+    for n in [&quot;%&quot;,&quot;￥&quot;,&quot;¥&quot;,&quot;$&quot;,&quot;，&quot;,&quot;,&quot;,&quot; &quot;,&quot;\t&quot;,&quot;元&quot;,&quot;美元&quot;,&quot;人民币&quot;,&quot;rmb&quot;,&quot;usd&quot;]:
+        s = s.replace(n, &quot;&quot;)
+    return s.rstrip(&quot;。.&quot;).strip()
+
+client = OpenAI(base_url=BASE_URL, api_key=API_KEY)
+correct = 0
+for i, (q, truth) in enumerate(QS, 1):
+    r = client.chat.completions.create(
+        model=MODEL, max_tokens=1500, temperature=0,
+        messages=[{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;: q + &quot;\n\n&quot; + PROTOCOL}])
+    ans = extract_final(r.choices[0].message.content or &quot;&quot;)
+    ok = norm(ans) == norm(truth)
+    correct += ok
+    print(f&quot;  q{i:02d}  {&#x27;✓&#x27; if ok else &#x27;✗&#x27;}  答={ans[:24]:&lt;24s} 真={truth}&quot;)
+print(f&quot;\n得分 {correct}/{len(QS)}  准确率 {correct/len(QS)*100:.0f}%&quot;)
+</textarea>
+    </div>
+  </section>
+
   <div class="foot">16 道题,从 4 位爬到 9 位,<b style="color:var(--og-bone)">每题都这么判</b> —— 但记住:禁草稿/单次/n=16,看理性版的误差棒与显著分组才不会过度解读。<br>
     <a class="og-btn is-ghost" href="battle-report-rational.html" style="margin-top:18px">看理性版(带 CI)</a> <a class="og-btn is-ghost" href="styleguide/" style="margin-top:18px">视觉识别手册 →</a></div>
 
 </div>
+
+<script>
+document.querySelectorAll('.rc-btn[data-copy]').forEach(function(b){
+  b.addEventListener('click', async function(){
+    var el = document.getElementById(b.dataset.copy), txt = el.value;
+    try { await navigator.clipboard.writeText(txt); }
+    catch(e){ el.style.left='0'; el.select(); document.execCommand('copy'); el.style.left='-9999px'; }
+    var h = document.getElementById('rc-hint'), old = h.getAttribute('data-old')||h.textContent;
+    h.setAttribute('data-old', old);
+    h.textContent = '✅ 已复制! ('+txt.length+' 字) 粘到你的模型即可';
+    h.style.color = '#5ff0b0';
+    clearTimeout(window._rcT); window._rcT = setTimeout(function(){ h.textContent = old; h.style.color=''; }, 2600);
+  });
+});
+</script>
 </body></html>
